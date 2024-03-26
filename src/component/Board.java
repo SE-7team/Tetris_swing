@@ -13,6 +13,10 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,6 +28,10 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import env.TetrisMain;
+import main.Tetris;
+import org.json.simple.*;
+
 import blocks.Block;
 import blocks.IBlock;
 import blocks.JBlock;
@@ -32,6 +40,9 @@ import blocks.OBlock;
 import blocks.SBlock;
 import blocks.TBlock;
 import blocks.ZBlock;
+import env.Scoreboard;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static main.Tetris.LevelMain;
 
@@ -52,6 +63,7 @@ public class Board extends JFrame {
 	private SimpleAttributeSet styleSet;
 	private Timer timer;
 	private Block curr;
+
   private JPanel glassPane; //게임 정지화면을 나타낼 glassPane
 	private int selectedOption = 1;
 	//게임 정지화면에서 재시작, 메인메뉴, 게임종료를 선택하는 selectedOption
@@ -331,7 +343,37 @@ public class Board extends JFrame {
 			timer.start();
 			*/
 		} else {
-			System.exit(0); // 아니오를 선택한 경우 게임 종료
+			int checkUpdatebool = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?\n (No : 게임 종료)", "Ask for updating score", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(checkUpdatebool == JOptionPane.YES_OPTION){
+
+				String answer=JOptionPane.showInputDialog("이름을 입력하세요");
+				JSONObject jsonObject=new JSONObject();
+				jsonObject.put("name", answer);
+				jsonObject.put("score", SidePanel.totalscore);
+				try (FileReader reader = new FileReader("Tetris_swing/userScore.json")) {
+					JSONParser parser = new JSONParser();
+					JSONArray jsonArray = (JSONArray) parser.parse(reader);
+					jsonArray.add(jsonObject);
+
+					try (FileWriter file = new FileWriter("Tetris_swing/userScore.json")) {
+						file.write(jsonArray.toJSONString());
+						file.flush();
+					} catch (IOException s) {
+						s.printStackTrace();
+					}
+					pane.setVisible(false);
+					Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
+				} catch (IOException | ParseException e) {
+					e.printStackTrace();
+				}
+
+
+				LevelMain();
+			}
+			else{
+				System.exit(0); // 아니오를 선택한 경우 게임 종료
+			}
+
 		}
 	}
 
@@ -363,16 +405,7 @@ public class Board extends JFrame {
 			placeBlock();
 			//블럭을 내려놓은 시간을 계산 후 빨리 내려놓았으면 추가점수 획득
 			afterTime=System.currentTimeMillis();
-			if(isDowned==false){
-				SidePanel.updateScore(2);
-				SidePanel.setScore();
-				System.out.println("한번도 다운키를 누르지 않으셨습니다.");
-			}
-			isDowned=false;
-			if(getTime()<20){
-				SidePanel.updateScore(1);
-				SidePanel.setScore();
-			}
+			checkForScore();
       // LineClear 과정
 			lineClear();
 			if (y == 0) { // 블록이 맨 위에 도달했을 때
@@ -399,6 +432,8 @@ public class Board extends JFrame {
 		// 바닥에 이동
 		while (!collisionCheck(0, 1)) { y++; }
 		placeBlock();
+		afterTime=System.currentTimeMillis();
+		checkForScore();
 		// LineClear 과정
 		lineClear();
 		if (y == 0) { // 블록이 맨 위에 도달했을 때
@@ -407,6 +442,9 @@ public class Board extends JFrame {
 		}
 		// 새로운 블럭 생성
 		curr = SidePanel.getNextBlock();
+		beforeTime=System.currentTimeMillis();
+		blockCount++;
+		System.out.println("추가 된 블록 수: "+blockCount);
 		SidePanel.paintNextPiece();
 		// curr = getRandomBlock();
 		x = 3;
@@ -461,7 +499,18 @@ public class Board extends JFrame {
 
 		placeBlock();
 	}
-
+	protected void checkForScore(){
+		if(isDowned==false){
+			SidePanel.updateScore(2);
+			SidePanel.setScore();
+			System.out.println("한번도 다운키를 누르지 않으셨습니다.");
+		}
+		isDowned=false;
+		if(getTime()<20){
+			SidePanel.updateScore(3);
+			SidePanel.setScore();
+		}
+	}
 	public void drawBoard() {
 		StringBuffer sb = new StringBuffer();
 		for(int t=0; t<WIDTH+2; t++) sb.append(BORDER_CHAR);
@@ -494,7 +543,7 @@ public class Board extends JFrame {
 		}
 		pane.setStyledDocument(doc);
 	}
-
+	
 
 
 	public void reset() {

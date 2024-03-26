@@ -3,8 +3,10 @@ package env;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import main.Tetris;
+import org.json.simple.parser.ParseException;
 
 public class TetrisMain extends JFrame {
     // 0 : Release, 1 : Development, 2 : Feature, 3: FeatureTest
@@ -84,6 +86,7 @@ public class TetrisMain extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+
         // Title as buildType
         String fullTitle = "Tetris " + buildString[buildType];
         JLabel titleLabel = new JLabel(fullTitle);
@@ -133,7 +136,13 @@ public class TetrisMain extends JFrame {
         am.put("enter", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                enterMenu(curFocus);
+                try {
+                    enterMenu(curFocus);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -146,7 +155,7 @@ public class TetrisMain extends JFrame {
         }
     }
 
-    private void enterMenu(int curFocus) {
+    private void enterMenu(int curFocus) throws IOException, ParseException {
         switch (curFocus) {
             case 0:
                 // 테트리스 게임 진입
@@ -157,6 +166,7 @@ public class TetrisMain extends JFrame {
                 // 추후 메서드 추가
                 break;
             case 2:
+                Tetris.showScoreBoard();
                 // ScoreBoard 진입
                 // 추후 메서드 추가
                 break;
