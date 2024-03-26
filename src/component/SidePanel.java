@@ -44,32 +44,33 @@ public class SidePanel extends JPanel {
 
 
     }
-    static Block getRandomBlock() {
+    static Block getRandomBlock(int color_blind, int pattern) {
         Random rnd = new Random(System.currentTimeMillis());
         int block = rnd.nextInt(7);
         switch(block) {
+            // Block 객체 생성시 color_blind, pattern 전달 추가
             case 0:
-                return new IBlock();
+                return new IBlock(color_blind,pattern);
             case 1:
-                return new JBlock();
+                return new JBlock(color_blind,pattern);
             case 2:
-                return new LBlock();
+                return new LBlock(color_blind,pattern);
             case 3:
-                return new ZBlock();
+                return new ZBlock(color_blind,pattern);
             case 4:
-                return new SBlock();
+                return new SBlock(color_blind,pattern);
             case 5:
-                return new TBlock();
+                return new TBlock(color_blind,pattern);
             case 6:
-                return new OBlock();
+                return new OBlock(color_blind,pattern);
         }
-        return new LBlock();
+        return new LBlock(color_blind,pattern);
     }
     //현재 문제: 띄워지는 블록의 색깔이 처음 nextblock의 색깔로 계속 유지됨
     //문제의심점들을 하나하나 gpt에게 제시한 후, 문제점을 찾아 해결
-    public static void paintNextPiece(){
+    public static void paintNextPiece(int color_blind, int pattern){
         nextPiece.removeAll();
-        Block s=getRandomBlock();
+        Block s=getRandomBlock(color_blind,pattern);
         BlockQueue.add(s);
         board2=new int[2][6];
         placeblock(s);
@@ -158,9 +159,7 @@ public class SidePanel extends JPanel {
     public static void setScore(){
         score.setText("score: "+totalscore);
     }
-    public SidePanel(){
-        //
-
+    public SidePanel(int color_blind, int pattern){
         //sidepanel에 다음블록패널 추가
         this.setLayout(new BorderLayout());
         nextPiece.setLayout(new BorderLayout());
@@ -193,7 +192,7 @@ public class SidePanel extends JPanel {
         //nextpiece 초기상태 설정
         board2= new int[HEIGHT2][WIDTH2];
         BlockQueue=new ArrayList<Block>();
-        Block cur=getRandomBlock();
+        Block cur=getRandomBlock(color_blind,pattern);
         setNextPanel();
         StyleConstants.setForeground(styleSet1, cur.getColor());
         BlockQueue.add(cur);

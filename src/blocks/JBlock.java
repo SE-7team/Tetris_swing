@@ -4,12 +4,16 @@ import java.awt.Color;
 
 public class JBlock extends Block {
 	
-	public JBlock() {
+	public JBlock(int color_blind, int pattern) {
 		shape = new int[][] {
 				{1, 1, 1},
 				{0, 0, 1}
 		};
-		color = Color.BLUE;
+		if(color_blind==1) color = new Color(0,114,178);
+		else color = Color.BLUE;
+		if(pattern==1) text="J";
+		else text="O";
+
 		rotate_status=1;
 	}
 
