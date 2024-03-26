@@ -38,8 +38,7 @@ import static main.Tetris.LevelMain;
 public class Board extends JFrame {
 
 	private static final long serialVersionUID = 2434035659171694595L;
-
-
+	
 	public static final int HEIGHT = 20;
 	public static final int WIDTH = 10;
 	public static final char BORDER_CHAR = 'X';
@@ -47,14 +46,19 @@ public class Board extends JFrame {
 	private JTextPane pane;
 
 	private int[][] board;
+
+	private String[][] board_text;
 	private Color[] board_color; //보드 색깔 저장 배열
 	private KeyListener playerKeyListener;
 	private SimpleAttributeSet styleSet;
 	private Timer timer;
 	private Block curr;
-  private JPanel glassPane; //게임 정지화면을 나타낼 glassPane
+	private JPanel glassPane; //게임 정지화면을 나타낼 glassPane
 	private int selectedOption = 1;
 	//게임 정지화면에서 재시작, 메인메뉴, 게임종료를 선택하는 selectedOption
+	private int color_blind=0;
+	private int pattern=0;
+	//색맹모드와 무늬모드를 위한 color_blind 와 pattern 선언
 	int x = 3; //Default Position.
 	int y = 0;
 
@@ -96,7 +100,7 @@ public class Board extends JFrame {
 
 				g2d.setFont(new Font("SansSerif", Font.BOLD, 40));
 
-				String[] menuItems = {"일시정지", "메인메뉴", " 재시작 ", "게임종료"};
+				String[] menuItems = {"일시정지", "메인메뉴", "게임재개", "게임종료"}; //재시작을 게임재개로 수정 3/23
 				Color[] menuColors = {new Color(200,200,200), Color.WHITE, Color.WHITE, Color.WHITE};
 
 				for (int i = 0; i < menuItems.length; i++) {
@@ -137,9 +141,10 @@ public class Board extends JFrame {
 		pane.setBorder(border);
 		this.getContentPane().add(pane, BorderLayout.CENTER);
 
-		SidePanel sidePanel=new SidePanel();
+		SidePanel sidePanel=new SidePanel(color_blind,pattern);
+		//다음의 블럭을 SidePanel 에서 가져오므로 SidePanel 에도 
+		//color_blind,pattern 전달하여 색맹, 무늬모드 구현하도록 추가
 		this.getContentPane().add(sidePanel,BorderLayout.EAST);
-
 
 		//Document default style.
 		styleSet = new SimpleAttributeSet();
@@ -173,6 +178,8 @@ public class Board extends JFrame {
 		//WIDTH에 좌우경계와 '\n'을 더한 WIDTH+2+1
 		//HEIGHT에 상하경계를 더한 HEIGHT+2
 		board_color = new Color[(HEIGHT+2)*(WIDTH+2+1)];
+		//블럭 무늬를 표현할 보드 텍스트 저장 배열
+		board_text = new String[HEIGHT][WIDTH];
 
 		playerKeyListener = new PlayerKeyListener();
 		addKeyListener(playerKeyListener);
@@ -210,22 +217,23 @@ public class Board extends JFrame {
 		Random rnd = new Random(System.currentTimeMillis());
 		int block = rnd.nextInt(7);
 		switch(block) {
+			// Block 객체 생성시 color_blind, pattern 전달 추가
 			case 0:
-				return new IBlock();
+				return new IBlock(color_blind,pattern);
 			case 1:
-				return new JBlock();
+				return new JBlock(color_blind,pattern);
 			case 2:
-				return new LBlock();
+				return new LBlock(color_blind,pattern);
 			case 3:
-				return new ZBlock();
+				return new ZBlock(color_blind,pattern);
 			case 4:
-				return new SBlock();
+				return new SBlock(color_blind,pattern);
 			case 5:
-				return new TBlock();
+				return new TBlock(color_blind,pattern);
 			case 6:
-				return new OBlock();
+				return new OBlock(color_blind,pattern);
 		}
-		return new LBlock();
+		return new LBlock(color_blind,pattern);
 	}
 
 	private void placeBlock() {
@@ -236,8 +244,8 @@ public class Board extends JFrame {
 				// curr.getShape(i, j)가 1일 때만 board 값을 업데이트
 				if (curr.getShape(i, j) == 1) {
 					board[y+j][x+i] = 1; // 현재 블록의 부분이 1일 경우에만 board를 업데이트
-          			board_color[offset + i] = curr.getColor();
-					//블럭이 있는 위치에 블럭 색깔 지정
+          			board_color[offset + i] = curr.getColor(); //블럭이 있는 위치에 블럭 색깔 지정
+					board_text[y+j][x+i] = curr.getText(); //블럭이 있는 위치에 블럭 텍스트 지정
 				}
 			}
 		}
@@ -282,6 +290,7 @@ public class Board extends JFrame {
  			// board_color[offset + (i - x)] = null; // 이전 블록의 색상 초기화
 
           			board_color[offset + i] = null; // 이전 블록의 색상 초기화
+					board_text[y+j][x+i] = null; // 이전 블록으 텍스트 초기화
 				}
 			}
 		}
@@ -300,14 +309,24 @@ public class Board extends JFrame {
 
 			if (fullLine) {
 				for (int moveRow = row; moveRow > 0; moveRow--) {
+					int rows = moveRow+1;
+					int offset = (rows) * (WIDTH+3) + 1;
 					for (int col = 0; col < WIDTH; col++) {
 						board[moveRow][col] = board[moveRow - 1][col];
+						board_color[offset + col] = board_color[offset + col - (WIDTH+3)];
+						board_text[moveRow][col] = board_text[moveRow - 1][col];
+						//블럭의 color 와 text 도 lineClear 될 수 있도록 추가
 					}
 				}
 
 				for (int col = 0; col < WIDTH; col++) {
 					board[0][col] = 0;
+					board_text[0][col] = null;
 				}
+				for (int col = 0; col < WIDTH+3; col++){
+					board_color[col] = null;
+				}
+
 				linesCleared++;
 				System.out.println("삭제된 라인 수"+linesCleared);
 				row++;
@@ -383,7 +402,7 @@ public class Board extends JFrame {
 			beforeTime=System.currentTimeMillis();
 			blockCount++;
 			System.out.println("추가 된 블록 수: "+blockCount);
-			SidePanel.paintNextPiece();
+			SidePanel.paintNextPiece(color_blind,pattern);
 			// curr = getRandomBlock();
 			x = 3;
 			y = 0;
@@ -407,7 +426,7 @@ public class Board extends JFrame {
 		}
 		// 새로운 블럭 생성
 		curr = SidePanel.getNextBlock();
-		SidePanel.paintNextPiece();
+		SidePanel.paintNextPiece(color_blind,pattern);
 		// curr = getRandomBlock();
 		x = 3;
 		y = 0;
@@ -470,7 +489,9 @@ public class Board extends JFrame {
 			sb.append(BORDER_CHAR);
 			for(int j=0; j < board[i].length; j++) {
 				if(board[i][j] == 1) {
-					sb.append("O");
+					//sb.append("O");
+					sb.append(board_text[i][j]); 
+					//블럭이 가진 텍스트(무늬)로 보드를 그린다
 				} else {
 					sb.append(" ");
 				}
@@ -500,6 +521,7 @@ public class Board extends JFrame {
 	public void reset() {
 		this.board = new int[HEIGHT][WIDTH]; // 리터럴 사용은 자제해주세요
 		this.board_color = new Color[(HEIGHT+2)*(WIDTH+2+1)]; // 보드 색상 배열도 리셋
+		this.board_text = new String[HEIGHT][WIDTH]; // 보드 텍스트 배열도 리셋
 		x = 3;
 		y = 0;
 	}
@@ -534,9 +556,9 @@ public class Board extends JFrame {
 						drawBoard();
 						break;
 					case KeyEvent.VK_ENTER:
-				    if(isDowned==false){
-					    isDowned=true;
-				    }
+						if(isDowned==false){
+							isDowned=true;
+						}
 						eraseCurr();
 						// 위치 이동 메서드
 						moveBottom();
@@ -544,6 +566,12 @@ public class Board extends JFrame {
 						break;
 					case KeyEvent.VK_P:
 						pauseGame();
+						break;
+					case KeyEvent.VK_Q:
+						color_blind=(color_blind+1)%2;
+						break;
+					case KeyEvent.VK_W:
+						pattern=(pattern+1)%2;
 						break;
 				}
 

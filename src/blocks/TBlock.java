@@ -4,12 +4,16 @@ import java.awt.Color;
 
 public class TBlock extends Block {
 	
-	public TBlock() {
+	public TBlock(int color_blind, int pattern) {
 		shape = new int[][] { 
 				{0, 1, 0},
 				{1, 1, 1},
 		};
-		color = Color.MAGENTA;
+		if(color_blind==1) color = new Color(204,121,167);
+		else color = Color.MAGENTA;
+		if(pattern==1) text="T";
+		else text="O";
+
 		rotate_status=1;
 	}
 

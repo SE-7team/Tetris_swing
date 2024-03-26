@@ -3,9 +3,10 @@ package blocks;
 import java.awt.Color;
 
 public abstract class Block {
-		
+
 	protected int[][] shape;
 	protected Color color;
+	protected String text="O";
 	protected int rotate_status=1;
 
 	public Block() {
@@ -14,6 +15,7 @@ public abstract class Block {
 				{1, 1}
 		};
 		color = Color.YELLOW;
+		text="O"; //블럭의 무늬를 나타내기 위한 Text 추가
 	}
 	
 	public int getShape(int x, int y) {
@@ -23,6 +25,10 @@ public abstract class Block {
 	public Color getColor() {
 		return color;
 	}
+	public String getText() {
+		return text;
+	}
+
 	
 	public void rotate() {
 		//Rotate the block 90 deg. clockwise.

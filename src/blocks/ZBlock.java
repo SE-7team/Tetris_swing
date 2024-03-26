@@ -4,12 +4,16 @@ import java.awt.Color;
 
 public class ZBlock extends Block {
 	
-	public ZBlock() {
+	public ZBlock(int color_blind, int pattern) {
 		shape = new int[][] {
 				{1, 1, 0},
 				{0, 1, 1},
 		};
-		color = Color.RED;
+		if(color_blind==1) color = new Color(213,94,0);
+		else color = Color.RED;
+		if(pattern==1) text="Z";
+		else text="O";
+
 		rotate_status=1;
 	}
 

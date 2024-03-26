@@ -4,12 +4,16 @@ import java.awt.Color;
 
 public class LBlock extends Block {
 	
-	public LBlock() {
+	public LBlock(int color_blind, int pattern) {
 		shape = new int[][] {
 				{1, 1, 1},
 				{1, 0, 0}
 		};
-		color = Color.ORANGE;
+		if(color_blind==1) color = new Color(230,159,0);
+		else color = Color.ORANGE;
+		if(pattern==1) text="L";
+		else text="O";
+
 		rotate_status=1;
 	}
 

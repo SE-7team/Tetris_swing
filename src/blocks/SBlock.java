@@ -4,12 +4,16 @@ import java.awt.Color;
 
 public class SBlock extends Block {
 
-	public SBlock() {
+	public SBlock(int color_blind, int pattern) {
 		shape = new int[][] {
 				{0, 1, 1},
 				{1, 1, 0},
 		};
-		color = Color.GREEN;
+		if(color_blind==1) color = new Color(86,180,233);
+		else color = Color.GREEN;
+		if(pattern==1) text="S";
+		else text="O";
+
 		rotate_status=1;
 	}
 
