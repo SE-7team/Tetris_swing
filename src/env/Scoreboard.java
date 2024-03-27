@@ -26,10 +26,11 @@ public class Scoreboard extends JFrame {
     private DefaultTableModel model;
     private JTable table;
     //문제가 생길경우 파일 경로를 확인해주세요.
-    private String JSON_FILE="Tetris_swing/userScore.json";
+    private String JSON_FILE = "Tetris_swing/userScore.json";
     private KeyListener playerKeyListener;
-    public static JSONArray jarray=new JSONArray();
-    public  Scoreboard()  {
+    public static JSONArray jarray = new JSONArray();
+
+    public Scoreboard()  {
         super("User Score Board");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +54,8 @@ public class Scoreboard extends JFrame {
         table.setRowSorter(rowSorter);
         rowSorter.addRowSorterListener(e -> updateRanks());
     }
-    public  Scoreboard(String name, int score)  {
+
+    public Scoreboard(String name, int score)  {
         super("User Score Board");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +67,7 @@ public class Scoreboard extends JFrame {
         // 테이블 생성
         initTable();
         settingForTable();
-        updateScoreBoard(name,score);
+        updateScoreBoard(name, score);
         playerKeyListener = new PlayerKeyListener();
         addKeyListener(playerKeyListener);
         setFocusable(true);
@@ -76,7 +78,21 @@ public class Scoreboard extends JFrame {
         rowSorter.addRowSorterListener(e -> updateRanks());
         table.setRowSorter(rowSorter);
     }
-    private void initTable(){
+//스코어보드가 비어있는지 아닌지 확인
+    public static boolean isFileEmpty(String filePath) {
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String firstLine = bufferedReader.readLine();
+            bufferedReader.close();
+            return firstLine == null || firstLine.isEmpty();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return true; // If an exception is thrown, we assume the file is empty
+        }
+    }
+
+    private void initTable() {
         // 테이블 생성
         table = new JTable(model);
         scroll = new JScrollPane(table);
@@ -89,7 +105,8 @@ public class Scoreboard extends JFrame {
         //테이블을 수정불가능하게 해줘
         table.setEnabled(false);
     }
-    private void settingForTable(){
+
+    private void settingForTable() {
         DefaultTableCellRenderer celAlignCenter = new DefaultTableCellRenderer();
         celAlignCenter.setHorizontalAlignment(JLabel.CENTER);
         table.getColumn("순위").setCellRenderer(celAlignCenter);
@@ -101,46 +118,53 @@ public class Scoreboard extends JFrame {
         table.setFont(newFont);
         this.getContentPane().add(scroll, BorderLayout.CENTER);
     }
-    private void loadScoreBoard()   {
-        try{
-            File file=new File(JSON_FILE);
-            if(file.exists()){
-                JSONParser parser = new JSONParser();
-                JSONArray jsonArr = (JSONArray) parser.parse(new FileReader(JSON_FILE));
 
-                // jsonArr를 점수 기준으로 내림차순 정렬(초기상태)
+    private void loadScoreBoard()  {
+        if (isFileEmpty(JSON_FILE)) {
+            JOptionPane.showMessageDialog(this, "저장된 스코어가 없습니다.", "Message", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Load the scoreboard
+            JSONParser parser = new JSONParser();
+            JSONArray jsonArr = null;
+            try {
+                jsonArr = (JSONArray) parser.parse(new FileReader(JSON_FILE));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            // jsonArr를 점수 기준으로 내림차순 정렬(초기상태)
                 jsonArr.sort((o1, o2) -> {
                     long score1 = (Long) ((JSONObject) o1).get("score");
                     long score2 = (Long) ((JSONObject) o2).get("score");
                     return Long.compare(score2, score1);
                 });
                 // 일일이 꺼내서 JSONObject로 사용
-                if(jsonArr.size() > 0 ) {
-                    for(int i=0; i<jsonArr.size(); i++){
-                        JSONObject jsonObj = (JSONObject)jsonArr.get(i);
-                        String name=(String)jsonObj.get("name");
-                        Long score=(Long)jsonObj.get("score");
-                        model.addRow(new Object[]{i+1, name, score});
+                if (jsonArr.size() > 0) {
+                    for (int i = 0; i < jsonArr.size(); i++) {
+                        JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+                        String name = (String) jsonObj.get("name");
+                        Long score = (Long) jsonObj.get("score");
+                        model.addRow(new Object[]{i + 1, name, score});
                     }
                 }
-            }else{
-                JOptionPane.showMessageDialog(this,"저장된 스코어가 없습니다.", "Message",JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch(IOException | ParseException e){
-            e.printStackTrace();
         }
 
 
+
     }
+
     //게임이 끝난 후 스코어보드를 보여줄 때
-    public void updateScoreBoard(String name, int score){
-        JLabel nowUserScore=new JLabel();
-        nowUserScore.setText(name+": "+score);
+    public void updateScoreBoard(String name, int score) {
+        JLabel nowUserScore = new JLabel();
+        nowUserScore.setText(name + ": " + score);
         nowUserScore.setForeground(Color.ORANGE);
-        nowUserScore.setFont(new Font("Malgun Gothic", Font.PLAIN,20));
-        nowUserScore.setBorder(new EmptyBorder(0,0,15,0));
+        nowUserScore.setFont(new Font("Malgun Gothic", Font.PLAIN, 20));
+        nowUserScore.setBorder(new EmptyBorder(0, 0, 15, 0));
         this.getContentPane().add(nowUserScore, BorderLayout.NORTH);
     }
+
     //정렬 순서에 따른 순위 갱신 for Chatgpt 3.5
     private void updateRanks() {
         // Get the number of rows in the table model
@@ -157,6 +181,7 @@ public class Scoreboard extends JFrame {
         @Override
         public void keyTyped(KeyEvent e) {
         }
+
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
@@ -167,10 +192,29 @@ public class Scoreboard extends JFrame {
                 case KeyEvent.VK_P:
                     System.exit(0);
                     break;
-                }
+                //json파일 초기화
+                case KeyEvent.VK_DELETE:
+                    clearJsonFile();
+                    Tetris.fromScoretoMain();
+                    break;
+            }
         }
+
         @Override
         public void keyReleased(KeyEvent e) {
         }
     }
+
+    //userScore.json 빈상태로 만들기
+    private void clearJsonFile() {
+        try {
+            // 기존 파일의 내용을 삭제하기 위해 파일을 읽고 내용을 비워서 다시 씁니다.
+            Files.write(Paths.get(JSON_FILE), "".getBytes());
+            System.out.println("JSON 파일 내용이 삭제되었습니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

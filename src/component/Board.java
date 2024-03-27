@@ -45,6 +45,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import static main.Tetris.LevelMain;
+import static main.Tetris.fromScoretoMain;
 
 public class Board extends JFrame {
 
@@ -76,6 +77,7 @@ public class Board extends JFrame {
 	private static int initInterval = 1000;
 	long beforeTime;
 	long afterTime;
+	private String JSON_FILE="Tetris_swing/userScore.json";
 	public double getTime(){
 		//1=0.1초
 		double secDiffTime=(afterTime - beforeTime)/100;
@@ -164,11 +166,14 @@ public class Board extends JFrame {
 		timer = new Timer(initInterval, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				moveDown();
+
+
 				drawBoard();
 				if (blockCount > 100 || linesCleared >= 20) {
 					// Decrease timer interval for faster movement
-					initInterval=700;
+					initInterval=500;
 					timer.setDelay(initInterval);
 					System.out.println("빨라졌습니다");
 					// You can adjust this factor according to your needs
@@ -327,53 +332,67 @@ public class Board extends JFrame {
 			}
 		}
 	}
+	//빈파일에 스코어보드 입력하는 경우
+	private void firstUploadScore()  {
+		String answer = JOptionPane.showInputDialog("이름을 입력하세요");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", answer);
+		jsonObject.put("score", SidePanel.totalscore);
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.add(jsonObject);
+		try (FileWriter file = new FileWriter(JSON_FILE)) {
+			file.write(jsonArray.toJSONString());
+			file.flush();
+		} catch (IOException s) {
+			s.printStackTrace();
+		}
+		Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
+	}
+	//스코어보드에 이미 데이터가 있는 경우
+	private void uploadScore(){
+		String answer = JOptionPane.showInputDialog("이름을 입력하세요");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", answer);
+		jsonObject.put("score", SidePanel.totalscore);
+		try (FileReader reader = new FileReader(JSON_FILE)) {
+			JSONParser parser = new JSONParser();
+			JSONArray jsonArray = (JSONArray) parser.parse(reader);
+			jsonArray.add(jsonObject);
 
-	private void gameOver() { // 종료 / 새로운 게임 시작 여부 확인
+			try (FileWriter file = new FileWriter(JSON_FILE)) {
+				file.write(jsonArray.toJSONString());
+				file.flush();
+			} catch (IOException s) {
+				s.printStackTrace();
+			}
+
+			Tetris.closeScoreBoard();
+			Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	private void gameOver()  { // 종료 / 새로운 게임 시작 여부 확인
 		timer.stop(); // 게임 타이머를 정지
-		// Option 패널 이용하여 Question
-		int response = JOptionPane.showConfirmDialog(this, "Game Over. 시작 메뉴로 돌아가시겠습니까?\n (No : 게임 종료)", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		if (response == JOptionPane.YES_OPTION) {
-			// 추후 메인 메뉴로 돌아갈 수 있도록 코드를 작성해야함
-			LevelMain();
-			/* 아래 코드는 새로운 게임을 진행하도록 만든 코드
-			reset(); // 보드 및 색 배열 초기화
-			curr = getRandomBlock(); // 새로운 블록 생성
-			placeBlock();
-			drawBoard(); // 보드 다시 그리기
-			timer.start();
-			*/
-		} else {
-			int checkUpdatebool = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?\n (No : 게임 종료)", "Ask for updating score", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(checkUpdatebool == JOptionPane.YES_OPTION){
-
-				String answer=JOptionPane.showInputDialog("이름을 입력하세요");
-				JSONObject jsonObject=new JSONObject();
-				jsonObject.put("name", answer);
-				jsonObject.put("score", SidePanel.totalscore);
-				try (FileReader reader = new FileReader("Tetris_swing/userScore.json")) {
-					JSONParser parser = new JSONParser();
-					JSONArray jsonArray = (JSONArray) parser.parse(reader);
-					jsonArray.add(jsonObject);
-
-					try (FileWriter file = new FileWriter("Tetris_swing/userScore.json")) {
-						file.write(jsonArray.toJSONString());
-						file.flush();
-					} catch (IOException s) {
-						s.printStackTrace();
-					}
-					pane.setVisible(false);
-					Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
-				} catch (IOException | ParseException e) {
-					e.printStackTrace();
-				}
-
-
-				LevelMain();
+		Tetris.closeGame();
+		Tetris.showScoreBoard();
+		int checkUpdatebool = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?\n (No : 게임 종료)", "Ask for updating score", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if(checkUpdatebool == JOptionPane.YES_OPTION) {
+			if(Scoreboard.isFileEmpty(JSON_FILE)){
+				firstUploadScore();
+			}else{
+				uploadScore();
+			}
+			int response = JOptionPane.showConfirmDialog(this, "Game Over. 시작 메뉴로 돌아가시겠습니까?\n (No : 게임 종료)", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response == JOptionPane.YES_OPTION) {
+				// 추후 메인 메뉴로 돌아갈 수 있도록 코드를 작성해야함
+				fromScoretoMain();
 			}
 			else{
 				System.exit(0); // 아니오를 선택한 경우 게임 종료
 			}
-
+		}else{
+			System.exit(0);
 		}
 	}
 
@@ -389,7 +408,7 @@ public class Board extends JFrame {
 		}
 	}
 
-	protected void moveDown() {
+	protected void moveDown()  {
 		// eraseCurr()을 if 안에 넣을지
 		eraseCurr();
 		if(!collisionCheck(0, 1)) {
@@ -427,7 +446,7 @@ public class Board extends JFrame {
 	}
 
 
-	protected void moveBottom() {
+	protected void moveBottom()  {
 		eraseCurr();
 		// 바닥에 이동
 		while (!collisionCheck(0, 1)) { y++; }
@@ -589,6 +608,7 @@ public class Board extends JFrame {
 						eraseCurr();
 						// 위치 이동 메서드
 						moveBottom();
+
 						drawBoard();
 						break;
 					case KeyEvent.VK_P:
