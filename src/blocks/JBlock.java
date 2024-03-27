@@ -11,7 +11,7 @@ public class JBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(0,114,178);
 		else color = Color.BLUE;
-		if(pattern==1) text="J";
+		if(pattern==1) text="O"; //text="J";
 		else text="O";
 
 		rotate_status=1;

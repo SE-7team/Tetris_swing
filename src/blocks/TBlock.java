@@ -11,7 +11,7 @@ public class TBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(204,121,167);
 		else color = Color.MAGENTA;
-		if(pattern==1) text="T";
+		if(pattern==1) text="O"; //text="T";
 		else text="O";
 
 		rotate_status=1;
