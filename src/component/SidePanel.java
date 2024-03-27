@@ -71,7 +71,7 @@ public class SidePanel extends JPanel {
         nextPiece.removeAll();
         Block s=getRandomBlock();
         BlockQueue.add(s);
-        board2=new int[2][6];
+        board2=new int[HEIGHT2][WIDTH2];
         placeblock(s);
         BlockQueue.remove(0);
         JLabel nexttext=new JLabel("Next");

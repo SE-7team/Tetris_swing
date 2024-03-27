@@ -42,12 +42,18 @@ public class Tetris {
 		tetrisScore.setVisible(true);
 	}
 
-	public static void showNowScoreBoard(String name,int score){
+	public static void showNowScoreBoard(String name,int score)  {
 		main.setVisible(false);
 		tetrisScore = new Scoreboard(name,score);
 		tetrisScore.setSize(ResolutionSizeX,ResolutionSizeY);
 		tetrisScore.setLocationRelativeTo(null);
 		tetrisScore.setVisible(true);
+	}
+	public static void closeGame() {
+		tetrisGame.setVisible(false);
+	}
+	public static void closeScoreBoard() {
+		tetrisScore.setVisible(false);
 	}
 	public static void LevelMain() {
 		tetrisGame.setVisible(false);

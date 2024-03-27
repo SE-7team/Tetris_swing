@@ -136,13 +136,9 @@ public class TetrisMain extends JFrame {
         am.put("enter", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    enterMenu(curFocus);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+
+                enterMenu(curFocus);
+
             }
         });
     }
@@ -155,7 +151,7 @@ public class TetrisMain extends JFrame {
         }
     }
 
-    private void enterMenu(int curFocus) throws IOException, ParseException {
+    private void enterMenu(int curFocus)  {
         switch (curFocus) {
             case 0:
                 // 테트리스 게임 진입
