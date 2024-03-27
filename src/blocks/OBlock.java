@@ -11,7 +11,7 @@ public class OBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(240,228,66);
 		else color = Color.YELLOW;
-		if(pattern==1) text="O";
+		if(pattern==1) text="O"; //text="O";
 		else text="O";
 
 		rotate_status=1;

@@ -11,7 +11,7 @@ public class LBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(230,159,0);
 		else color = Color.ORANGE;
-		if(pattern==1) text="L";
+		if(pattern==1) text="G"; //text="L";
 		else text="O";
 
 		rotate_status=1;

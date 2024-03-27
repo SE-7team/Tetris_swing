@@ -11,9 +11,8 @@ public class ZBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(213,94,0);
 		else color = Color.RED;
-		if(pattern==1) text="Z";
+		if(pattern==1) text="G"; //text="Z";
 		else text="O";
-
 		rotate_status=1;
 	}
 

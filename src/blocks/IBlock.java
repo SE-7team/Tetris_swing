@@ -12,7 +12,7 @@ public class IBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(6,158,115);
 		else color = Color.CYAN;
-		if(pattern==1) text="I";
+		if(pattern==1) text="O"; //text="I";
 		else text="O";
 
 		rotate_status=1;

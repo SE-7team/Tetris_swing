@@ -11,7 +11,7 @@ public class SBlock extends Block {
 		};
 		if(color_blind==1) color = new Color(86,180,233);
 		else color = Color.GREEN;
-		if(pattern==1) text="S";
+		if(pattern==1) text="O"; //text="S";
 		else text="O";
 
 		rotate_status=1;
