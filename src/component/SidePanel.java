@@ -15,8 +15,8 @@ import java.util.Random;
 
 public class SidePanel extends JPanel {
     static int totalscore;
-    public static final int HEIGHT2 = 5;
-    public static final int WIDTH2 = 5;
+    public static final int HEIGHT2 = 6;
+    public static final int WIDTH2 = 6;
     public static final char BORDER_CHAR1 = ' ';
     static SimpleAttributeSet styleSet1;
 
@@ -31,10 +31,10 @@ public class SidePanel extends JPanel {
     public static void setNextPanel(){
         nextPiece.setEditable(false);
         nextPiece.setBackground(Color.BLACK);
-        CompoundBorder border = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 5),
-                BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
-        nextPiece.setBorder(border);
+//        CompoundBorder border = BorderFactory.createCompoundBorder(
+//                BorderFactory.createLineBorder(Color.CYAN, 5),
+//                BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
+//        nextPiece.setBorder(border);
         styleSet1 = new SimpleAttributeSet();
         StyleConstants.setFontSize(styleSet1, 18);
         StyleConstants.setFontFamily(styleSet1, "Courier New");
@@ -71,7 +71,7 @@ public class SidePanel extends JPanel {
         nextPiece.removeAll();
         Block s=getRandomBlock();
         BlockQueue.add(s);
-        board2=new int[2][6];
+        board2=new int[HEIGHT2][WIDTH2];
         placeblock(s);
         BlockQueue.remove(0);
         JLabel nexttext=new JLabel("Next");
@@ -141,13 +141,17 @@ public class SidePanel extends JPanel {
             case 0:
                 totalscore+=1;
                 break;
-            //빠른 시간내에 블록을 떨어트린 경우 or 타이머가 빨라진 경우
+            //타이머가 빨라진 경우
             case 1:
                 totalscore+=2;
                 break;
             //한번도 다운 or 엔터키를 누르지 않은 경우(머뭇거린 경우)
             case 2:
                 totalscore-=5;
+                break;
+            //빠른 시간내에 블록을 떨어트린 경우
+            case 3:
+                totalscore+=20;
                 break;
             default:
                 totalscore++;
@@ -165,13 +169,13 @@ public class SidePanel extends JPanel {
         this.setLayout(new BorderLayout());
         nextPiece.setLayout(new BorderLayout());
         nextPiece.setBorder(new LineBorder(Color.BLACK));
-        nextPiece.setPreferredSize(new Dimension(80,110));
+        nextPiece.setPreferredSize(new Dimension(80,100));
         this.add(nextPiece, BorderLayout.NORTH);
 
         //
         scorePanel.setLayout(new BorderLayout());
         scorePanel.setBackground(Color.BLACK);
-        scorePanel.setPreferredSize(new Dimension(20,80));
+        //scorePanel.setPreferredSize(new Dimension(20,80));
         this.add(scorePanel,BorderLayout.CENTER);
         //점수패널
         totalscore=0;

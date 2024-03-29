@@ -7,7 +7,8 @@ public class ImportSettings {
 
     public ImportSettings() {
         try {
-            File file = new File("settings.ini");
+            //문제가 생길경우 파일 경로를 확인해주세요.
+            File file = new File("Tetris_swing/settings.ini");
             BufferedReader br = new BufferedReader(new FileReader(file));
             String st;
             while ((st = br.readLine()) != null) {

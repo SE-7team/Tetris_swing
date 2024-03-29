@@ -13,6 +13,10 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,6 +28,10 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import env.TetrisMain;
+import main.Tetris;
+import org.json.simple.*;
+
 import blocks.Block;
 import blocks.IBlock;
 import blocks.JBlock;
@@ -32,8 +40,12 @@ import blocks.OBlock;
 import blocks.SBlock;
 import blocks.TBlock;
 import blocks.ZBlock;
+import env.Scoreboard;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static main.Tetris.LevelMain;
+import static main.Tetris.fromScoretoMain;
 
 public class Board extends JFrame {
 
@@ -52,6 +64,7 @@ public class Board extends JFrame {
 	private SimpleAttributeSet styleSet;
 	private Timer timer;
 	private Block curr;
+
   private JPanel glassPane; //게임 정지화면을 나타낼 glassPane
 	private int selectedOption = 1;
 	//게임 정지화면에서 재시작, 메인메뉴, 게임종료를 선택하는 selectedOption
@@ -64,6 +77,7 @@ public class Board extends JFrame {
 	private static int initInterval = 1000;
 	long beforeTime;
 	long afterTime;
+	private String JSON_FILE="Tetris_swing/userScore.json";
 	public double getTime(){
 		//1=0.1초
 		double secDiffTime=(afterTime - beforeTime)/100;
@@ -152,11 +166,14 @@ public class Board extends JFrame {
 		timer = new Timer(initInterval, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				moveDown();
+
+
 				drawBoard();
 				if (blockCount > 100 || linesCleared >= 20) {
 					// Decrease timer interval for faster movement
-					initInterval=700;
+					initInterval=500;
 					timer.setDelay(initInterval);
 					System.out.println("빨라졌습니다");
 					// You can adjust this factor according to your needs
@@ -315,23 +332,67 @@ public class Board extends JFrame {
 			}
 		}
 	}
+	//빈파일에 스코어보드 입력하는 경우
+	private void firstUploadScore()  {
+		String answer = JOptionPane.showInputDialog("이름을 입력하세요");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", answer);
+		jsonObject.put("score", SidePanel.totalscore);
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.add(jsonObject);
+		try (FileWriter file = new FileWriter(JSON_FILE)) {
+			file.write(jsonArray.toJSONString());
+			file.flush();
+		} catch (IOException s) {
+			s.printStackTrace();
+		}
+		Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
+	}
+	//스코어보드에 이미 데이터가 있는 경우
+	private void uploadScore(){
+		String answer = JOptionPane.showInputDialog("이름을 입력하세요");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", answer);
+		jsonObject.put("score", SidePanel.totalscore);
+		try (FileReader reader = new FileReader(JSON_FILE)) {
+			JSONParser parser = new JSONParser();
+			JSONArray jsonArray = (JSONArray) parser.parse(reader);
+			jsonArray.add(jsonObject);
 
-	private void gameOver() { // 종료 / 새로운 게임 시작 여부 확인
+			try (FileWriter file = new FileWriter(JSON_FILE)) {
+				file.write(jsonArray.toJSONString());
+				file.flush();
+			} catch (IOException s) {
+				s.printStackTrace();
+			}
+
+			Tetris.closeScoreBoard();
+			Tetris.showNowScoreBoard(answer, SidePanel.totalscore);
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	private void gameOver()  { // 종료 / 새로운 게임 시작 여부 확인
 		timer.stop(); // 게임 타이머를 정지
-		// Option 패널 이용하여 Question
-		int response = JOptionPane.showConfirmDialog(this, "Game Over. 시작 메뉴로 돌아가시겠습니까?\n (No : 게임 종료)", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		if (response == JOptionPane.YES_OPTION) {
-			// 추후 메인 메뉴로 돌아갈 수 있도록 코드를 작성해야함
-			LevelMain();
-			/* 아래 코드는 새로운 게임을 진행하도록 만든 코드
-			reset(); // 보드 및 색 배열 초기화
-			curr = getRandomBlock(); // 새로운 블록 생성
-			placeBlock();
-			drawBoard(); // 보드 다시 그리기
-			timer.start();
-			*/
-		} else {
-			System.exit(0); // 아니오를 선택한 경우 게임 종료
+		Tetris.closeGame();
+		Tetris.showScoreBoard();
+		int checkUpdatebool = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?\n (No : 게임 종료)", "Ask for updating score", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if(checkUpdatebool == JOptionPane.YES_OPTION) {
+			if(Scoreboard.isFileEmpty(JSON_FILE)){
+				firstUploadScore();
+			}else{
+				uploadScore();
+			}
+			int response = JOptionPane.showConfirmDialog(this, "Game Over. 시작 메뉴로 돌아가시겠습니까?\n (No : 게임 종료)", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response == JOptionPane.YES_OPTION) {
+				// 추후 메인 메뉴로 돌아갈 수 있도록 코드를 작성해야함
+				fromScoretoMain();
+			}
+			else{
+				System.exit(0); // 아니오를 선택한 경우 게임 종료
+			}
+		}else{
+			System.exit(0);
 		}
 	}
 
@@ -347,7 +408,7 @@ public class Board extends JFrame {
 		}
 	}
 
-	protected void moveDown() {
+	protected void moveDown()  {
 		// eraseCurr()을 if 안에 넣을지
 		eraseCurr();
 		if(!collisionCheck(0, 1)) {
@@ -363,16 +424,7 @@ public class Board extends JFrame {
 			placeBlock();
 			//블럭을 내려놓은 시간을 계산 후 빨리 내려놓았으면 추가점수 획득
 			afterTime=System.currentTimeMillis();
-			if(isDowned==false){
-				SidePanel.updateScore(2);
-				SidePanel.setScore();
-				System.out.println("한번도 다운키를 누르지 않으셨습니다.");
-			}
-			isDowned=false;
-			if(getTime()<20){
-				SidePanel.updateScore(1);
-				SidePanel.setScore();
-			}
+			checkForScore();
       // LineClear 과정
 			lineClear();
 			if (y == 0) { // 블록이 맨 위에 도달했을 때
@@ -394,11 +446,13 @@ public class Board extends JFrame {
 	}
 
 
-	protected void moveBottom() {
+	protected void moveBottom()  {
 		eraseCurr();
 		// 바닥에 이동
 		while (!collisionCheck(0, 1)) { y++; }
 		placeBlock();
+		afterTime=System.currentTimeMillis();
+		checkForScore();
 		// LineClear 과정
 		lineClear();
 		if (y == 0) { // 블록이 맨 위에 도달했을 때
@@ -407,6 +461,9 @@ public class Board extends JFrame {
 		}
 		// 새로운 블럭 생성
 		curr = SidePanel.getNextBlock();
+		beforeTime=System.currentTimeMillis();
+		blockCount++;
+		System.out.println("추가 된 블록 수: "+blockCount);
 		SidePanel.paintNextPiece();
 		// curr = getRandomBlock();
 		x = 3;
@@ -461,7 +518,18 @@ public class Board extends JFrame {
 
 		placeBlock();
 	}
-
+	protected void checkForScore(){
+		if(isDowned==false){
+			SidePanel.updateScore(2);
+			SidePanel.setScore();
+			System.out.println("한번도 다운키를 누르지 않으셨습니다.");
+		}
+		isDowned=false;
+		if(getTime()<20){
+			SidePanel.updateScore(3);
+			SidePanel.setScore();
+		}
+	}
 	public void drawBoard() {
 		StringBuffer sb = new StringBuffer();
 		for(int t=0; t<WIDTH+2; t++) sb.append(BORDER_CHAR);
@@ -494,7 +562,7 @@ public class Board extends JFrame {
 		}
 		pane.setStyledDocument(doc);
 	}
-
+	
 
 
 	public void reset() {
@@ -540,6 +608,7 @@ public class Board extends JFrame {
 						eraseCurr();
 						// 위치 이동 메서드
 						moveBottom();
+
 						drawBoard();
 						break;
 					case KeyEvent.VK_P:
