@@ -112,7 +112,8 @@ public class MenuController {
         view.requestFocusInWindow();
 
     }
-    private void enterMenu(int curFocus) {
+    //unit test를 위해 private을 protected로 변경
+    protected void enterMenu(int curFocus) {
         switch (curFocus) {
             case 0:
                 view.setVisible(false);

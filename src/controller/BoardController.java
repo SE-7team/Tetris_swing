@@ -97,7 +97,8 @@ public class BoardController implements ModelStateChangeListener {
         );
 
         if (checkUpdatebool == JOptionPane.YES_OPTION) {
-            String name = JOptionPane.showInputDialog("이름을 입력하세요");
+            //unit test를 위해 showInputDialog를 getPlayerNameInput를 통해 사용
+            String name = getPlayerNameInput(); //JOptionPane.showInputDialog("이름을 입력하세요");
             ScoreIO.writeScore(name, model.getTotalscore());
             temp.destroyView();
             temp.initFrame(name, model.getTotalscore());
@@ -115,6 +116,11 @@ public class BoardController implements ModelStateChangeListener {
             // 게임 종료
             System.exit(0);
         }
+    }
+
+    public String getPlayerNameInput() {
+        //unit test를 위해 showInputDialog를 getPlayerNameInput를 통해 사용
+        return JOptionPane.showInputDialog("이름을 입력하세요");
     }
 
     public void gameExit() {
