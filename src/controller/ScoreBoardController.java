@@ -61,7 +61,8 @@ public class ScoreBoardController {
         model.initData();
     }
 
-    private void initFocus() {
+    //unit test를 위해 private -> protected로 변경
+    protected void initFocus() {
         // JComponent.WHEN_IN_FOCUSED_WINDOW
         InputMap im = view.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         // InputMap im = view.getRootPane().getInputMap();
@@ -81,4 +82,12 @@ public class ScoreBoardController {
 
     }
 
+    //unit test를 위해 getView(), setView()생성
+    public Object getView() {
+        return view;
+    }
+
+    public void setView(ScoreBoardView view) {
+        this.view = view;
+    }
 }

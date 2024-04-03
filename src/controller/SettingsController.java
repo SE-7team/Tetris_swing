@@ -51,7 +51,8 @@ public class SettingsController {
         view.initWindow(model.getResX(), model.getResY());
     }
 
-    private void initFocus() {
+    //unit test를 위해 private -> protected로 변경
+    protected void initFocus() {
         InputMap im = view.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = view.getRootPane().getActionMap();
 

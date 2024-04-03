@@ -97,7 +97,8 @@ public class BoardController implements ModelStateChangeListener {
         );
 
         if (checkUpdatebool == JOptionPane.YES_OPTION) {
-            String name = JOptionPane.showInputDialog("이름을 입력하세요");
+            //unit test를 위해 showInputDialog를 getPlayerNameInput를 통해 사용
+            String name = getPlayerNameInput(); //JOptionPane.showInputDialog("이름을 입력하세요");
             ScoreIO.writeScore(name, model.getTotalscore());
             temp.destroyView();
             temp.initFrame(name, model.getTotalscore());
@@ -115,6 +116,11 @@ public class BoardController implements ModelStateChangeListener {
             // 게임 종료
             System.exit(0);
         }
+    }
+
+    public String getPlayerNameInput() {
+        //unit test를 위해 showInputDialog를 getPlayerNameInput를 통해 사용
+        return JOptionPane.showInputDialog("이름을 입력하세요");
     }
 
     public void gameExit() {
@@ -165,14 +171,14 @@ public class BoardController implements ModelStateChangeListener {
         private String pause;
 
         public PlayerKeyListener() {
-          keyMap = OutGameModel.getInstance().getKeyMap();
+            keyMap = OutGameModel.getInstance().getKeyMap();
             // 아래는 getKeyText를 통해 저장된 값임
-          moveLeft = keyMap.get("moveLeft");
-          moveRight = keyMap.get("moveRight");
-          drop = keyMap.get("drop");
-          moveDown = keyMap.get("moveDown");
-          rotate = keyMap.get("rotate");
-          pause = keyMap.get("pause");
+            moveLeft = keyMap.get("moveLeft");
+            moveRight = keyMap.get("moveRight");
+            drop = keyMap.get("drop");
+            moveDown = keyMap.get("moveDown");
+            rotate = keyMap.get("rotate");
+            pause = keyMap.get("pause");
         }
 
 
@@ -185,6 +191,8 @@ public class BoardController implements ModelStateChangeListener {
         public void keyPressed(KeyEvent e) {
             currentKey = KeyEvent.getKeyText(e.getKeyCode());
             if (!model.isPaused()) {
+                /*
+                //윈도우에서는 잘 작동이 안됨
                 if (currentKey.equals(moveDown)) {
                     if(!model.isDowned()){
                         model.setDowned(true);
@@ -215,11 +223,12 @@ public class BoardController implements ModelStateChangeListener {
                 else if (currentKey.equals(pause)) {
                     pauseGame();
                 }
-                /*
+                */
+
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
                         if(!model.isDowned()){
-                           model.setDowned(true);
+                            model.setDowned(true);
                         }
                         moveDownControl();
                         updateBoard();
@@ -244,12 +253,12 @@ public class BoardController implements ModelStateChangeListener {
                         moveBottomControl();
                         updateBoard();
                         break;
-                        // 두벌식에서 P를 누르는 경우 인식X --> ESC 키로 변경
+                    // 두벌식에서 P를 누르는 경우 인식X --> ESC 키로 변경
                     case KeyEvent.VK_ESCAPE:
                         pauseGame();
                         break;
                 }
-                */
+
             }
             else {
                 // 일시 정지 상태인 경우, 스위치 문을 사용하여 추가 키를 처리합니다.
@@ -280,6 +289,7 @@ public class BoardController implements ModelStateChangeListener {
                                 break;
                             case 3: //게임종료
                                 gameExit();
+                                //showConfirmDialog 으로 물어보지 않고 바로 종료하도록 바꿀 예정
                                 break;
                         }
                 }

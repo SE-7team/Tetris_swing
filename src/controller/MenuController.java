@@ -60,10 +60,19 @@ public class MenuController {
 
     private void initFocus() {
         HashSet<String> keys = new HashSet<>();
+        /*
         keys.add("↑");
         keys.add("↓");
         keys.add("⏎");
         keys.add("⎋");
+        */
+
+        //윈도우에서는 아래가 호환됨
+        keys.add("Up");
+        keys.add("Down");
+        keys.add("Enter");
+        keys.add("Escape");
+
         // JComponent.WHEN_IN_FOCUSED_WINDOW
         InputMap im = view.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         // InputMap im = view.getRootPane().getInputMap();
@@ -112,7 +121,8 @@ public class MenuController {
         view.requestFocusInWindow();
 
     }
-    private void enterMenu(int curFocus) {
+    //unit test를 위해 private을 protected로 변경
+    protected void enterMenu(int curFocus) {
         switch (curFocus) {
             case 0:
                 view.setVisible(false);
