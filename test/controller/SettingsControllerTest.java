@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+//by chatGPT3.5
 public class SettingsControllerTest {
     private SettingsController controller;
 

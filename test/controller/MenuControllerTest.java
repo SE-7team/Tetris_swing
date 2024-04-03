@@ -7,6 +7,7 @@ import view.MenuView;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+//by chatGPT3.5
 public class MenuControllerTest {
 
     private MenuController menuController;

@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//by chatGPT3.5
 public class ScoreBoardControllerTest {
     private ScoreBoardController controller;
 
