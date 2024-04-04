@@ -1,7 +1,6 @@
 package model;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +16,9 @@ import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -39,6 +37,9 @@ public class BoardModel {
     //색맹모드와 무늬모드를 위한 color_blind 와 pattern 선언
     private boolean color_blind;
     private int pattern;
+
+    //게임 난이도를 위한 difficulty
+    private int difficulty;
 
     public static final int HEIGHT = 20;
     public static final int WIDTH = 10;
@@ -96,6 +97,11 @@ public class BoardModel {
             }
         });
         color_blind = OutGameModel.isBlindMode();
+
+        difficulty = 1;
+        // difficulty 는 0, 1, 2로 해도 되고 "Easy", "Normal", "Hard"로 해도 된다
+        // 어떻게 할지는 이후에 설정 일단 1 로
+
         pattern = 0;
         //Initialize board for the game.
         board = new int[HEIGHT][WIDTH];
@@ -144,8 +150,11 @@ public class BoardModel {
     }
 
     private Block getRandomBlock() {
-        Random rnd = new Random(System.currentTimeMillis());
-        int block = rnd.nextInt(7);
+        //Random rnd = new Random(System.currentTimeMillis());
+        //int block = rnd.nextInt(7);
+
+        int block = rws_select();
+
         // Block 객체 생성시 color_blind, pattern 전달 추가
         switch(block) {
             case 0:
@@ -164,6 +173,46 @@ public class BoardModel {
                 return new OBlock(color_blind,pattern);
         }
         return new LBlock(color_blind,pattern);
+    }
+
+    public int rws_select() { //확률에 따른 블럭 생성
+        // 블럭들의 적합도(가중치)
+        double I = 10, J = 10, L = 10, Z = 10, S = 10, T = 10, O = 10;
+        if (difficulty==0) {
+            I = 12;
+            //System.out.println("Easy");
+        }
+        if (difficulty==1) {
+            I = 10;
+            //System.out.println("Normal");
+        }
+        if (difficulty==2) {
+            I = 8;
+            //System.out.println("Hard");
+        }
+
+        // 블럭들의 적합도(가중치) 배열
+        double[] fitness = {I, J, L, Z, S, T, O};
+
+        Random random = new Random();
+        //Random random = new Random(System.currentTimeMillis()); // 이것을 쓰면 오차범위가 5%를 넘음
+
+        // 최대 적합도 찾기
+        double maxFitness = 0;
+        for (double fit : fitness) {
+            if (fit > maxFitness) {
+                maxFitness = fit;
+            }
+        }
+        // 확률적 수락을 통한 개체 선택
+        while (true) {
+            // 임의의 개체 선택
+            int index = random.nextInt(fitness.length);
+            // 선택된 개체의 적합도가 확률적으로 수락되는지 확인
+            if (random.nextDouble() < fitness[index] / maxFitness) {
+                return index; // 선택된 개체의 인덱스 반환
+            }
+        }
     }
 
     public Block getNextBlock() {
@@ -473,4 +522,7 @@ public class BoardModel {
         placeBlock();
     }
 
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
 }
