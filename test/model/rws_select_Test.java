@@ -31,7 +31,7 @@ public class rws_select_Test extends TestCase {
             boolean is_error_under_5 = false;
 
             double selectionProbability = (fitnesses[i] / totalFitness);
-            System.out.printf("블럭 %s: 선택 확률 %.6f | ", blocks[i], selectionProbability);
+            System.out.printf("블럭 %s: 설정된 선택 확률 %.6f | ", blocks[i], selectionProbability);
 
             double selectionRatio = (double) selections[i] / simulationCount;
             System.out.printf("%d번 선택, 선택 비율: %f, ", selections[i], selectionRatio);
@@ -78,7 +78,7 @@ public class rws_select_Test extends TestCase {
         // 출력 편의를 위한 블럭 배열
         String[] blocks = {"I", "J", "L", "Z", "S", "T", "O"};
         // 시뮬레이션 횟수
-        int simulationCount = 100000;
+        int simulationCount =100000;
 
         // 난이도 설정
         boardModel.setDifficulty(2);
