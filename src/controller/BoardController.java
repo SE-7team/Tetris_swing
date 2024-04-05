@@ -118,6 +118,9 @@ public class BoardController implements ModelStateChangeListener {
     }
 
     public void gameExit() {
+        System.exit(0);
+
+        /*
         //Yes No버튼 선택할 때 마우스입력만 되는건가?
         //만약 마우스입력만 된다면 이후에 키보드로도 선택할 수 있도록 수정
         model.setPaused(true);
@@ -127,6 +130,7 @@ public class BoardController implements ModelStateChangeListener {
             System.exit(0);
 
         } else { }
+        */
     }
 
     public void moveDownControl() {
@@ -185,6 +189,7 @@ public class BoardController implements ModelStateChangeListener {
         public void keyPressed(KeyEvent e) {
             currentKey = KeyEvent.getKeyText(e.getKeyCode());
             if (!model.isPaused()) {
+                /*
                 if (currentKey.equals(moveDown)) {
                     if(!model.isDowned()){
                         model.setDowned(true);
@@ -215,7 +220,7 @@ public class BoardController implements ModelStateChangeListener {
                 else if (currentKey.equals(pause)) {
                     pauseGame();
                 }
-                /*
+                */
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
                         if(!model.isDowned()){
@@ -249,7 +254,6 @@ public class BoardController implements ModelStateChangeListener {
                         pauseGame();
                         break;
                 }
-                */
             }
             else {
                 // 일시 정지 상태인 경우, 스위치 문을 사용하여 추가 키를 처리합니다.
