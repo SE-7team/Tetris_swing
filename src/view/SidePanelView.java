@@ -122,7 +122,7 @@ public class SidePanelView extends JPanel {
         nextPiece.setStyledDocument(doc);
     }
 
-    public void drawBoard(Block nextBlock) {
+    public void drawBoard(Block nextBlock, int what_item) {
         paintNextPiece(nextBlock);
         placeblock(nextBlock);
         StringBuffer sb = new StringBuffer();
@@ -135,7 +135,20 @@ public class SidePanelView extends JPanel {
             for(int j=0; j < board[i].length; j++) {
                 if(board[i][j] == 1) {
                     sb.append("O");
-                } else {
+                }
+                //사이드 패널에서 L, F 텍스트 표현
+                else if(board[i][j] == 2){
+                    switch (what_item) {
+                        case 0:
+                            sb.append("L");
+                            break;
+                        case 1:
+                            sb.append("F");
+                            break;
+                        default:
+                    }
+                }
+                else {
                     sb.append(" ");
                 }
             }
