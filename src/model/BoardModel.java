@@ -67,6 +67,7 @@ public class BoardModel {
     int blockCount;
     int linesCleared;
     boolean isDowned;
+    int linesCleared_10;
 
 
     private static int initInterval = 1000;
@@ -74,6 +75,17 @@ public class BoardModel {
     long afterTime;
 
     private int totalscore;
+
+    public int getWhat_item() {
+        return what_item;
+    }
+
+    public void setWhat_item(int what_item) {
+        this.what_item = what_item;
+    }
+
+    int what_item; //아이템 모드에서 아이템인지를 표현
+    int how_many_items=2; //아이템 모드에서 총 아이템 개수
 
 
     // 게임 일시 정지 확인용 isPaused by chatGPT3.5
@@ -326,11 +338,28 @@ public class BoardModel {
             int offset = (rows) * (WIDTH+3) + x + 1;
             for(int i=0; i<curr.width(); i++) {
                 // curr.getShape(i, j)가 1일 때만 board 값을 업데이트
-                if (curr.getShape(i, j) == 1) {
+                if (curr.getShape(i, j) >= 1) {
                     board[y+j][x+i] = 1; // 현재 블록의 부분이 1일 경우에만 board를 업데이트
                     board_color[offset + i] = curr.getColor();
                     board_text[y+j][x+i] = curr.getText(); //블럭이 있는 위치에 블럭 텍스트 지정
                     //블럭이 있는 위치에 블럭 색깔 지정
+
+                    if(curr.getShape(i, j) == 2) {
+                        //블럭의 shape가 2인곳에서
+                        //what_item에 따라서 L과 F를 설정
+                        switch (what_item){
+                            case 0:
+                                board_text[y+j][x+i]="L";
+                                break;
+                            case 1:
+                                board_text[y+j][x+i]="F";
+                                break;
+                            default:
+                        }
+
+                        board_color[offset + i]=Color.WHITE;
+                    }
+
                 }
             }
         }
@@ -372,7 +401,7 @@ public class BoardModel {
             for(int i=0; i<curr.width(); i++) {
                 // 현재 블록의 shape가 1인 부분만 0으로 지워야함 이걸 못찾았다니..
                 // if (board[j][i] == 1)
-                if (curr.getShape(i, j) == 1) {
+                if (curr.getShape(i, j) >= 1) {
                     board[y+j][x+i] = 0;
                     // board_color[offset + (i - x)] = null; // 이전 블록의 색상 초기화
 
@@ -393,6 +422,15 @@ public class BoardModel {
                     break;
                 }
             }
+
+            for (int col = 0; col < WIDTH; col++) {
+                if (Objects.equals(board_text[row][col], "L")) {
+                    //L이 있는지 검사하고 L이 있으면 lineclear
+                    fullLine = true;
+                    break;
+                }
+            }
+
             if (fullLine) {
                 linesToClear.add(row); // 지워질 줄을 linesToClear에 추가
             }
@@ -404,7 +442,7 @@ public class BoardModel {
                 for (int col = 0; col < WIDTH; col++) {
                     // 노란색으로 변경하는 부분은 UI에 따라 다르게 구현될 수 있습니다.
                     // 예시로, 각 줄의 색상을 변경하는 방식을 사용할 수 있습니다.
-                    board_color[(line + 1) * (WIDTH + 3) + col + 1] = Color.WHITE;
+                    board_color[(line + 1) * (WIDTH + 3) + col + 1] = Color.white;
                 }
             }
             notifyUpdateBoard();
@@ -434,6 +472,14 @@ public class BoardModel {
                 }
             }
 
+            for (int col = 0; col < WIDTH; col++) {
+                if (Objects.equals(board_text[row][col], "L")) {
+                    //L이 있는지 검사하고 L이 있으면 lineclear
+                    fullLine = true;
+                    break;
+                }
+            }
+
             if (fullLine) {
                 for (int moveRow = row; moveRow > 0; moveRow--) {
                     int rows = moveRow+1;
@@ -457,10 +503,77 @@ public class BoardModel {
                 }
 
                 linesCleared++;
+                if(linesCleared!=0 && linesCleared%10==0) {
+                    //linesCleared 증가하는 것이 lineClear 내에서 증가는데
+                    //이때 10단위로 증가할 때마다 linesCleared_10++
+                    linesCleared_10++;
+                    System.out.println("10개 라인 삭제"+linesCleared_10);
+                }
+
                 System.out.println("삭제된 라인 수"+linesCleared);
                 row++;
 
             }
+        }
+    }
+
+    private void lineFill() {
+        for (int col = 0; col < WIDTH; col++) {
+            boolean is_F=false;
+            int F_row_position=HEIGHT - 1;
+
+            for (int row = 0; row <= HEIGHT - 1; row++) {
+                if (Objects.equals(board_text[row][col], "F")) {
+                    is_F = true;
+                    F_row_position=row;
+                    break;
+                }
+            }
+            if (is_F) {
+                for (int fill_row = F_row_position; fill_row <= HEIGHT - 1; fill_row++) {
+                    int offset = (fill_row+1) * (WIDTH+3) + 1;
+                    if(board[fill_row][col]==0){
+                        board[fill_row][col]=1;
+                        board_color[offset + col] = new Color(180,180,180);
+                        board_text[fill_row][col] = "O";
+                    }
+                }
+            }
+        }
+    }
+
+    protected void random_text(Block block){
+        if(true){
+        //if(linesCleared_10>0){
+            Random random = new Random();
+
+            linesCleared_10--;
+
+            what_item=random.nextInt(how_many_items);
+            //what_item=1;
+
+            //블럭 shape 안에 1이 몇개 있는지 검사
+            int block_count=0;
+            for(int j=0; j< block.height(); j++)
+                for(int i=0; i<block.width(); i++)
+                    if(block.getShape(i,j)==1) block_count++;
+
+            //블럭 shape 안에 1의 개수를 기반으로 랜덤한 숫자 배정
+            int random_text_position=random.nextInt(block_count)+1;
+            block_count=0;
+
+            //블럭 shape 안에 random_text_position 번째의 1이 나오면
+            //해당 블럭 shape 안의 1을 2로 설정하고 return
+            for(int j=0; j< block.height(); j++)
+                for(int i=0; i<block.width(); i++)
+                {
+                    if(block.getShape(i,j)==1) block_count++;
+                    if(block_count==random_text_position){
+                        block.setShape(i,j,2);
+                        return;
+                    }
+
+                }
         }
     }
 
@@ -491,6 +604,9 @@ public class BoardModel {
         // curr = SidePanel.getNextBlock();
         curr = nextBlock;
         nextBlock = getRandomBlock();
+
+        random_text(nextBlock);
+
         beforeTime=System.currentTimeMillis();
         blockCount++;
         System.out.println("추가 된 블록 수: "+blockCount);
@@ -521,6 +637,8 @@ public class BoardModel {
             placeBlock();
             afterTime=System.currentTimeMillis();
             checkForScore();
+            //F를 검사하는 lineFill, 블럭이 채워진 후 LineClear
+            lineFill();
             // LineClear 과정
             startLineClearAnimation();
         }
@@ -533,6 +651,8 @@ public class BoardModel {
         placeBlock();
         afterTime=System.currentTimeMillis();
         checkForScore();
+        //F를 검사하는 lineFill, 블럭이 채워진 후 LineClear
+        lineFill();
         // LineClear 과정
         startLineClearAnimation();
     }
