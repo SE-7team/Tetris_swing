@@ -137,7 +137,7 @@ public class MenuController {
                 view.dispose();
                 view = null;
                 // 아이템 모드 진입하도록 수정해야 함
-                boardController = new BoardController();
+                boardController = new BoardController(1);
                 break;
             case 2:
                 view.setVisible(false);

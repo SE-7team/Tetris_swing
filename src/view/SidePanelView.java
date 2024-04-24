@@ -34,7 +34,7 @@ import model.blocks.*;
 public class SidePanelView extends JPanel {
 
     private int [][] board;
-
+    private String[][] board_text;
     private static final int WIDTH = 6;
     private static final int HEIGHT = 6;
 
@@ -56,7 +56,7 @@ public class SidePanelView extends JPanel {
         scoreText = new JTextPane();
         scoreString = "Score: 0";
         board = new int[HEIGHT][WIDTH];
-
+        board_text= new String[HEIGHT][WIDTH];
         //sidepanel에 다음블록패널 추가
         this.setLayout(new BorderLayout());
         nextPiece.setLayout(new BorderLayout());
@@ -94,8 +94,6 @@ public class SidePanelView extends JPanel {
     public void paintNextPiece(Block nextBlock){
         nextPiece.removeAll();
         nextPiece.setBackground(Color.BLACK);
-        // 왜 2 * 6?
-        // board=new int[2][6];
         board=new int[HEIGHT][WIDTH];
         placeblock(nextBlock);
         JLabel nexttext=new JLabel("Next");
@@ -116,13 +114,14 @@ public class SidePanelView extends JPanel {
             for(int i=0; i<nextBlock.width(); i++) {
                 if (y1+j < board.length && x1+i < board[y1+j].length) {
                     board[y1+j][x1+i] = nextBlock.getShape(i, j);
+                    board_text[y1+j][x1+i] = nextBlock.getText();
                 }
             }
         }
         nextPiece.setStyledDocument(doc);
     }
 
-    public void drawBoard(Block nextBlock) {
+    public void drawBoard(Block nextBlock,int what_item) {
         paintNextPiece(nextBlock);
         placeblock(nextBlock);
         StringBuffer sb = new StringBuffer();
@@ -133,9 +132,24 @@ public class SidePanelView extends JPanel {
         for(int i=0; i < board.length; i++) {
             sb.append(BORDER_CHAR);
             for(int j=0; j < board[i].length; j++) {
-                if(board[i][j] == 1) {
-                    sb.append("O");
-                } else {
+                if(board[i][j] >= 1) {
+                    //sb.append("O");
+                    sb.append(board_text[i][j]);
+                }else if(board[i][j] == 2){
+                    switch (what_item) {
+                        case 0:
+                            sb.append("L");
+                            break;
+                        case 1:
+                            sb.append("F");
+                            break;
+                        case 2:
+                            sb.append("S");
+                            break;
+                        default:
+                    }
+                }
+                else {
                     sb.append(" ");
                 }
             }
