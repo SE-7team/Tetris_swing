@@ -138,6 +138,9 @@ public class OutGameModel {
         OutGameModel.optionString = optionString;
     }
 
+    public String[][] getStringType() {
+        return stringType;
+    }
     public int getOptionFocus() {
         return optionFocus;
     }

@@ -23,7 +23,7 @@ public class BoardController implements ModelStateChangeListener {
     private KeyListener playerKeyListener;
 
 
-    private int selectedOption = 1;
+    protected int selectedOption = 1;
 
     private String currentKey;
 
@@ -58,7 +58,10 @@ public class BoardController implements ModelStateChangeListener {
         view.addKeyListenerToFrame(playerKeyListener);
     }
 
-
+    public String getPlayerNameInput() {
+        //unit test를 위해 showInputDialog를 getPlayerNameInput를 통해 사용
+        return JOptionPane.showInputDialog("이름을 입력하세요");
+    }
 
     public int getSelectedOption() {
         return selectedOption;
@@ -214,41 +217,6 @@ public class BoardController implements ModelStateChangeListener {
                 else if (currentKey.equals(pause)) {
                     pauseGame();
                 }
-                /*
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_DOWN:
-                        if(!model.isDowned()){
-                           model.setDowned(true);
-                        }
-                        moveDownControl();
-                        updateBoard();
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        model.moveRight();
-                        updateBoard();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        model.moveLeft();
-                        updateBoard();
-                        break;
-                    case KeyEvent.VK_UP:
-                        model.moveRotate();
-                        updateBoard();
-                        break;
-                    case KeyEvent.VK_ENTER:
-                        if(!model.isDowned()){
-                            model.setDowned(true);
-                        }
-                        // 위치 이동 메서드
-                        moveBottomControl();
-                        updateBoard();
-                        break;
-                        // 두벌식에서 P를 누르는 경우 인식X --> ESC 키로 변경
-                    case KeyEvent.VK_ESCAPE:
-                        pauseGame();
-                        break;
-                }
-                */
             }
             else {
                 // 일시 정지 상태인 경우, 스위치 문을 사용하여 추가 키를 처리합니다.

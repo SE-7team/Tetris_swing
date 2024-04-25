@@ -47,7 +47,12 @@ public class BoardModel {
 
     //Default Block Position. (3,0)
     int x = 3;
+
     int y = 0;
+
+    public void setY(int y) {
+        this.y = y;
+    }
 
     // Side board
     public static ArrayList<Block> BlockQueue;
@@ -58,7 +63,7 @@ public class BoardModel {
 
     private Timer timer;
 
-    private Block curr;
+    protected Block curr;
 
     private Block nextBlock;
 
@@ -70,7 +75,7 @@ public class BoardModel {
     int linesCleared_10;
 
 
-    private static int initInterval = 1000;
+    protected static int initInterval = 1000;
     long beforeTime;
     long afterTime;
 
@@ -543,8 +548,8 @@ public class BoardModel {
     }
 
     protected void random_text(Block block){
-        if(true){
-        //if(linesCleared_10>0){
+        //if(true){
+        if(linesCleared_10>0){
             Random random = new Random();
 
             linesCleared_10--;
