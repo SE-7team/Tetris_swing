@@ -34,39 +34,12 @@ public class BoardController implements ModelStateChangeListener {
         initView();
         this.model.addModelStateChangeListener(this);
     }
-    public BoardController(int a){
-        model= new ItemBoardModel();
+    public BoardController(BoardModel model) {
+        this.model = model;
         initView();
         this.model.addModelStateChangeListener(this);
     }
-    public BoardController(BoardModel model, BoardView view, SidePanelView viewSide) {
-        this.model = model;
-        this.view = view;
-        this.viewSidePanel = viewSide;
-        // view와 controller의 상호작용
-        this.view.setController(this);
-        // view에 sidepanel 추가
-        view.getContentPane().add(viewSidePanel, BorderLayout.EAST);
 
-        playerKeyListener = new PlayerKeyListener();
-        // addKeyListener, setFocusable, requestFocus를 BoardView의 메서드로 대체
-        view.addKeyListenerToFrame(playerKeyListener);
-        this.model.addModelStateChangeListener(this);
-    }
-    public BoardController(ItemBoardModel model, BoardView view, SidePanelView viewSide) {
-        this.model = model;
-        this.view = view;
-        this.viewSidePanel = viewSide;
-        // view와 controller의 상호작용
-        this.view.setController(this);
-        // view에 sidepanel 추가
-        view.getContentPane().add(viewSidePanel, BorderLayout.EAST);
-
-        playerKeyListener = new PlayerKeyListener();
-        // addKeyListener, setFocusable, requestFocus를 BoardView의 메서드로 대체
-        view.addKeyListenerToFrame(playerKeyListener);
-        this.model.addModelStateChangeListener(this);
-    }
 
     public void initView() {
         view = new BoardView();
@@ -311,15 +284,6 @@ public class BoardController implements ModelStateChangeListener {
         public void keyReleased(KeyEvent e) {
 
         }
-    }
-    public static void main(String[] args) {
-        BoardModel model = new BoardModel(); // 모델 생성
-        BoardView view = new BoardView(); // 뷰 생성
-        SidePanelView viewSide = new SidePanelView();
-        BoardController controller = new BoardController(model, view, viewSide); // 컨트롤러 생성 및 모델과 뷰 연결
-
-        view.setController(controller); // 뷰에 컨트롤러 설정
-        view.setVisible(true); // 뷰를 보이게 설정
     }
 
 }

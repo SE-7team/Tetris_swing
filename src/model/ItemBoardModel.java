@@ -41,7 +41,8 @@ public class ItemBoardModel extends BoardModel {
                     newBlock = normalGetBlock(block2);
                     isPlusItem=true;
                     return newBlock;
-                //무게추 아이템case 2:
+                case 2:
+                    return new WeightBlock();
                 default:
                     return new ClearBlock();
             }
@@ -315,45 +316,65 @@ public class ItemBoardModel extends BoardModel {
     @Override
     public void moveDown() {
         eraseCurr();
-        if(!collisionCheck(0, 1)) {
-            y++;
-            System.out.println(y + '\n');
-            if(initInterval==1000){
-                updateScore(0);
-            }else{
-                updateScore(1);
+        if (curr instanceof WeightBlock) {
+            if (!collisionCheck(0, 1) || y < HEIGHT - curr.height()) {
+                y++;
+                System.out.println(y + '\n');
+                placeBlock();
+            } else {
+                placeBlock();
+                afterTime = System.currentTimeMillis();
+                generateBlock();
             }
-            placeBlock();
         }
         else {
-            placeBlock();
-            afterTime=System.currentTimeMillis();
-            checkForScore();
-            lineFill();
-            // LineClear 과정
-            startLineClearAnimation();
+            if (!collisionCheck(0, 1)) {
+                y++;
+                System.out.println(y + '\n');
+                if (initInterval == 1000) {
+                    updateScore(0);
+                } else {
+                    updateScore(1);
+                }
+                placeBlock();
+            } else {
+                placeBlock();
+                afterTime = System.currentTimeMillis();
+                checkForScore();
+                lineFill();
+                // LineClear 과정
+                startLineClearAnimation();
+            }
         }
     }
     @Override
     public void moveBottom() {
         eraseCurr();
         // 바닥에 이동
-        while (!collisionCheck(0, 1)) { y++; }
-        placeBlock();
-        afterTime=System.currentTimeMillis();
-        checkForScore();
-        lineFill();
-        // LineClear 과정
-        startLineClearAnimation();
+        if (curr instanceof WeightBlock) {
+            while (y < HEIGHT - curr.height()) {
+                moveDown();
+            }
+        }
+        else {
+            while (!collisionCheck(0, 1)) {
+                y++;
+            }
+            placeBlock();
+            afterTime = System.currentTimeMillis();
+            checkForScore();
+            lineFill();
+            // LineClear 과정
+            startLineClearAnimation();
+        }
     }
     public int rws_selectItem() { //확률에 따른 블럭 생성
         // 블럭들의 적합도(가중치)
-        double A=10,B=30;
-                //,C=10;,
+        double A=10,B=30, C=10;
 
 
         // 블럭들의 적합도(가중치) 배열
-        double[] fitness = {A,B};
+        double[] fitness = {A,B,C};
 
         Random random = new Random();
         //Random random = new Random(System.currentTimeMillis()); // 이것을 쓰면 오차범위가 5%를 넘음
