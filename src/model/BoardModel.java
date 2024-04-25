@@ -482,7 +482,7 @@ public class BoardModel {
         }
     }
 
-    private void lineClear() {
+    protected void lineClear() {
         for (int row = HEIGHT - 1; row >= 0; row--) {
             boolean fullLine = true;
 

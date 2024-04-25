@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ScoreIO {
-    private final static String JSON_FILE = "userScore.json";
+    protected static String JSON_FILE = "userScore.json";
 
     public JSONArray jsonArr = null;
 
