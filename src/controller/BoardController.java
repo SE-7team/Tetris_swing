@@ -7,8 +7,10 @@ import java.util.HashMap;
 
 import javax.swing.*;
 
+import IO.ImportSettings;
 import IO.ScoreIO;
 import model.BoardModel;
+import model.ItemBoardModel;
 import model.OutGameModel;
 import view.BoardView;
 import model.ModelStateChangeListener;
@@ -32,7 +34,26 @@ public class BoardController implements ModelStateChangeListener {
         initView();
         this.model.addModelStateChangeListener(this);
     }
+    public BoardController(int a){
+        model= new ItemBoardModel();
+        initView();
+        this.model.addModelStateChangeListener(this);
+    }
     public BoardController(BoardModel model, BoardView view, SidePanelView viewSide) {
+        this.model = model;
+        this.view = view;
+        this.viewSidePanel = viewSide;
+        // view와 controller의 상호작용
+        this.view.setController(this);
+        // view에 sidepanel 추가
+        view.getContentPane().add(viewSidePanel, BorderLayout.EAST);
+
+        playerKeyListener = new PlayerKeyListener();
+        // addKeyListener, setFocusable, requestFocus를 BoardView의 메서드로 대체
+        view.addKeyListenerToFrame(playerKeyListener);
+        this.model.addModelStateChangeListener(this);
+    }
+    public BoardController(ItemBoardModel model, BoardView view, SidePanelView viewSide) {
         this.model = model;
         this.view = view;
         this.viewSidePanel = viewSide;
@@ -108,7 +129,7 @@ public class BoardController implements ModelStateChangeListener {
 
         if (checkUpdatebool == JOptionPane.YES_OPTION) {
             String name = JOptionPane.showInputDialog("이름을 입력하세요");
-            ScoreIO.writeScore(name, model.getTotalscore(),OutGameModel.getDifficulty());
+            ScoreIO.writeScore(name, model.getTotalscore(),OutGameModel.getDifficulty(), model.getGamemode());
             temp.destroyView();
             temp.initFrame(name, model.getTotalscore());
         }
@@ -147,7 +168,7 @@ public class BoardController implements ModelStateChangeListener {
         // View에 게임 보드 그리기 요청
         view.drawBoard(model.getBoard(), model.getBoard_color(), model.getBoard_text());
         // SidePanel에 다음 블럭 넘기기
-        viewSidePanel.drawBoard(model.getNextBlock());
+        viewSidePanel.drawBoard(model.getNextBlock(), model.getWhat_item());
         // 사이드 패널의 점수를 view에 넘겨야 한다
         viewSidePanel.setScoreText(model.getTotalscore());
     }
