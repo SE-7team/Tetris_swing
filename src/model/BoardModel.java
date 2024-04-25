@@ -50,6 +50,18 @@ public class BoardModel {
 
     int y = 0;
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public void setY(int y) {
         this.y = y;
     }
@@ -62,6 +74,10 @@ public class BoardModel {
     private Color[] board_color; //보드 색깔 저장 배열
 
     private Timer timer;
+
+    public void setCurr(Block curr) {
+        this.curr = curr;
+    }
 
     protected Block curr;
 
@@ -337,7 +353,7 @@ public class BoardModel {
         }
     }
 
-    private void placeBlock() {
+    protected void placeBlock() {
         for(int j=0; j<curr.height(); j++) {
             int rows = y+j+1;
             int offset = (rows) * (WIDTH+3) + x + 1;
@@ -370,7 +386,7 @@ public class BoardModel {
         }
     }
 
-    private boolean collisionCheck(int horizon, int vertical) { // 블록, 벽 충돌을 체크하는 메서드
+    protected boolean collisionCheck(int horizon, int vertical) { // 블록, 벽 충돌을 체크하는 메서드
         int nextX = x + horizon;
         int nextY = y + vertical;
 
@@ -522,7 +538,7 @@ public class BoardModel {
         }
     }
 
-    private void lineFill() {
+    protected void lineFill() {
         for (int col = 0; col < WIDTH; col++) {
             boolean is_F=false;
             int F_row_position=HEIGHT - 1;
@@ -661,6 +677,7 @@ public class BoardModel {
         // LineClear 과정
         startLineClearAnimation();
     }
+
 
     public void moveRight() {
         eraseCurr();

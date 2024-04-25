@@ -7,6 +7,11 @@ public abstract class Block {
 	protected int[][] shape;
 	protected Color color;
 	protected String text;
+
+	public int getRotate_status() {
+		return rotate_status;
+	}
+
 	// Code Review : Static 변수도 아니고, 생성자에서 초기화 해주고 있는데, 굳이 멤버 변수에 값을 미리 대입할 필요는 없다
 	// protected String text="O";
 	protected int rotate_status=1;
