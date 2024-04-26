@@ -1,3 +1,5 @@
+## V3.2 코드중 ItemBoardModel에 대한 unittest 수정이 필요합니다!
+---------------------
 # Tetris_swing
 ---------------------------------
 for 2024 Software Engineering Team Project
@@ -12,3 +14,4 @@ for 2024 Software Engineering Team Project
   * 1차 요구사항에 해당되는 수정 요소들은 main 브랜치에서 관리하겠습니다
 
 * feature/* 브랜치는 각자 기능을 구현한 후 PR을 하는 브랜치입니다.
+
