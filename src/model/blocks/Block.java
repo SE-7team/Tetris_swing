@@ -78,6 +78,10 @@ public abstract class Block {
 		return 0;
 	}
 
+	public void setRotate_status(int rotate_status) {
+		this.rotate_status = rotate_status;
+	}
+
 	public int getRotate_status() {
 		return rotate_status;
 	}
