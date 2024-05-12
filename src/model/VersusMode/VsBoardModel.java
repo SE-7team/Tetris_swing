@@ -113,13 +113,6 @@ public class VsBoardModel extends BoardModel {
             }
             if (fullLine) {
                 linesToClear.add(row);// 지워질 줄을 linesToClear에 추가
-                //setGrayLinesNum();
-//                if ( grayLinesNum < 10) {
-//
-//                    // 공격에 사용될 줄 생성!
-//                    makeAttackLine(row - num);
-//                }
-//                num++;
             }
         }
         notifyVersusUpdateBoard();
@@ -147,9 +140,11 @@ public class VsBoardModel extends BoardModel {
             Timer timer2 = new Timer(200, e -> {
                 lineClear(); // 실제로 줄을 지우는 메서드
                 saveBackground();
+                Opp_setting();
                 if(opp_Num>=2){
                     attackEd(opp_Num,opp_board,opp_text);
                 }
+                notifyUpdateBoard();
                 init_pvp();
                 generateBlock();
                 timer.start();
@@ -159,6 +154,7 @@ public class VsBoardModel extends BoardModel {
         }
         else {
             saveBackground();
+            Opp_setting();
             if(opp_Num>=2){
                 attackEd(opp_Num,opp_board,opp_text);
             }
@@ -166,6 +162,11 @@ public class VsBoardModel extends BoardModel {
             generateBlock();
 
         }
+    }
+    public void Opp_setting(){
+        opp_Num=VersusBoardController.getOpp_Num(playerType);
+        opp_board=VersusBoardController.getOpp_Line(playerType);
+        opp_text=VersusBoardController.getOpp_Text(playerType);
     }
     public void saveBackground() {
 
@@ -208,7 +209,7 @@ public class VsBoardModel extends BoardModel {
                 board_color[r * WIDTH + col] = null;
             }
         }
-        notifyUpdateBoard();  // 변경사항을 뷰에 알림
+        // 변경사항을 뷰에 알림
     }
 
     @Override
@@ -223,7 +224,7 @@ public class VsBoardModel extends BoardModel {
                 board_color[(HEIGHT - attackNum + row) * WIDTH + col] = Color.GRAY;
             }
         }
-        notifyUpdateBoard();
+
     }
     @Override
     public void moveDown() {

@@ -15,7 +15,7 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 
 public class VersusBoardController extends BoardController {
-    protected BoardModel P2Model;
+    protected static BoardModel P2Model;
     private VsBoardView P2View;
     private SidePanelView P2SidePanelView;
 
@@ -146,6 +146,31 @@ public class VersusBoardController extends BoardController {
             P2Model.opp_board=model.getAttackLines();
             P2Model.opp_text=model.getAttackString();
             P2Model.opp_Num=model.getAttackLinesNum();
+        }
+    }
+    public static int getOpp_Num(int playerType){
+        if (playerType == 0) {
+            System.out.println(P2Model.getAttackLinesNum()+"개 공격 가져옴");
+            return P2Model.getAttackLinesNum();
+        } else {
+            System.out.println(model.getAttackLinesNum()+"개 공격 가져옴");
+            return model.getAttackLinesNum();
+        }
+    }
+
+    public static int[][] getOpp_Line(int playerType){
+        if (playerType == 0) {
+            return P2Model.getAttackLines();
+        } else {
+            return model.getAttackLines();
+        }
+    }
+
+    public static String[][] getOpp_Text(int playerType){
+        if (playerType == 0) {
+            return P2Model.getAttackString();
+        } else {
+            return model.getAttackString();
         }
     }
 

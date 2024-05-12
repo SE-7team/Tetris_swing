@@ -18,7 +18,7 @@ import view.SidePanelView;
 
 public class BoardController implements ModelStateChangeListener {
 
-    protected BoardModel model;
+    protected static BoardModel model;
     protected BoardView view;
     protected SidePanelView sidePanelView;
     protected KeyListener playerKeyListener;
