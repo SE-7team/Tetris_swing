@@ -131,8 +131,9 @@ public class VsBoardModel extends BoardModel {
         if (!linesToClear.isEmpty()) {
             if(linesToClear.size()>=2 && grayLinesNum<10){
                 int num=0;
-                for(int line: linesToClear){
-                    makeAttackLine(line);
+                for(int line=0;line<linesToClear.size();line++){
+                    int getLine= linesToClear.get(line);
+                    makeAttackLine(getLine);
                     num++;
                 }
             }
@@ -174,9 +175,8 @@ public class VsBoardModel extends BoardModel {
                 init_pvp();
                 VersusBoardController.setOpp_Clear(playerType);
             }
-
+            notifyUpdateBoard();
             generateBlock();
-
         }
     }
     public void Opp_setting(){
