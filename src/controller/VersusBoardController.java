@@ -174,6 +174,24 @@ public class VersusBoardController extends BoardController {
         }
     }
 
+    public static void setOpp_Clear(int playerType){
+        if(playerType==0){
+            int[][] attackLines=new int[10][10];
+            String[][] attackString=new String[10][10];
+            int attackLinesNum=0;
+            P2Model.setAttackLines(attackLines);
+            P2Model.setAttackString(attackString);
+            P2Model.setAttackLinesNum(attackLinesNum);
+        }else{
+            int[][] attackLines=new int[20][10];
+            String[][] attackString=new String[20][10];
+            int attackLinesNum=0;
+            model.setAttackLines(attackLines);
+            model.setAttackString(attackString);
+            model.setAttackLinesNum(attackLinesNum);
+        }
+    }
+
     public class PlayerKeyListener implements KeyListener {
         private HashMap<String, String> keyMap;
 

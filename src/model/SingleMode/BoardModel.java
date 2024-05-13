@@ -20,6 +20,7 @@ public class BoardModel {
     public int[][] opp_board;// 상대의 배경
     public String [][] opp_text;
     public Color [] opp_color;
+
     // board
     protected int[][] board;
 
@@ -655,6 +656,17 @@ public class BoardModel {
 
     public int getAttackLinesNum() {
         return attackLinesNum;
+    }
+    public void setAttackLines(int[][] attackLines) {
+        this.attackLines = attackLines;
+    }
+
+    public void setAttackString(String[][] attackString) {
+        this.attackString = attackString;
+    }
+
+    public void setAttackLinesNum(int attackLinesNum) {
+        this.attackLinesNum = attackLinesNum;
     }
     private int[][] attackLines; 		// 공격에 사용될 줄들
     private String[][] attackString;

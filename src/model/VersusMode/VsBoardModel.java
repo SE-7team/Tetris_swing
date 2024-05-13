@@ -44,6 +44,18 @@ public class VsBoardModel extends BoardModel {
         return attackLinesNum;
     }
 
+    public void setAttackLines(int[][] attackLines) {
+        this.attackLines = attackLines;
+    }
+
+    public void setAttackString(String[][] attackString) {
+        this.attackString = attackString;
+    }
+
+    public void setAttackLinesNum(int attackLinesNum) {
+        this.attackLinesNum = attackLinesNum;
+    }
+
     private int[][] attackLines; 		// 공격에 사용될 줄들
     private String[][] attackString;
     private int attackLinesNum; 		// 공격할 줄 수
@@ -61,11 +73,11 @@ public class VsBoardModel extends BoardModel {
         this.playerType = playerType;
     }
     public void init_pvp(){
-        this.attackLines = new int[HEIGHT][WIDTH];
-        this.attackString= new String[HEIGHT][WIDTH];
-        this.opp_board=new int[HEIGHT][WIDTH];
-        this.opp_text=new String[HEIGHT][WIDTH];
-        this.opp_Num=0;
+        attackLines = new int[HEIGHT][WIDTH];
+        attackString= new String[HEIGHT][WIDTH];
+        opp_board=new int[HEIGHT][WIDTH];
+        opp_text=new String[HEIGHT][WIDTH];
+        opp_Num=0;
         //this.opp_color=new Color[(HEIGHT+2)*(WIDTH+2+1)];
     }
 
@@ -115,7 +127,7 @@ public class VsBoardModel extends BoardModel {
                 linesToClear.add(row);// 지워질 줄을 linesToClear에 추가
             }
         }
-        notifyVersusUpdateBoard();
+        //notifyVersusUpdateBoard();
         if (!linesToClear.isEmpty()) {
             if(linesToClear.size()>=2 && grayLinesNum<10){
                 int num=0;
@@ -124,7 +136,7 @@ public class VsBoardModel extends BoardModel {
                     num++;
                 }
             }
-            notifyVersusUpdateBoard();
+            //notifyVersusUpdateBoard();
             // 강조할 줄을 노란색으로 변경하는 로직
             for (int line : linesToClear) {
                 for (int col = 0; col < WIDTH; col++) {
@@ -143,9 +155,11 @@ public class VsBoardModel extends BoardModel {
                 Opp_setting();
                 if(opp_Num>=2){
                     attackEd(opp_Num,opp_board,opp_text);
+                    init_pvp();
+                    VersusBoardController.setOpp_Clear(playerType);
                 }
                 notifyUpdateBoard();
-                init_pvp();
+
                 generateBlock();
                 timer.start();
             });
@@ -157,8 +171,10 @@ public class VsBoardModel extends BoardModel {
             Opp_setting();
             if(opp_Num>=2){
                 attackEd(opp_Num,opp_board,opp_text);
+                init_pvp();
+                VersusBoardController.setOpp_Clear(playerType);
             }
-            init_pvp();
+
             generateBlock();
 
         }
@@ -198,7 +214,7 @@ public class VsBoardModel extends BoardModel {
             for (int col = 0; col < WIDTH; col++) {
                 board[row][col] = board[row + attackNum][col];
                 board_text[row][col] = board_text[row + attackNum][col];
-                board_color[(row * WIDTH) + col] = board_color[((row + attackNum) * WIDTH) + col];
+                board_color[(row+1) * (WIDTH+3) + col+1] = board_color[(row +1+ attackNum) * (WIDTH+3) + col+1];
             }
         }
         System.out.println("보드 위로 올리기 완료");
@@ -206,7 +222,7 @@ public class VsBoardModel extends BoardModel {
             for (int col = 0; col < WIDTH; col++) {
                 board[r][col] = 0;
                 board_text[r][col] = null;
-                board_color[r * WIDTH + col] = null;
+                board_color[(r+1) * (WIDTH+3) + col+1] = null;
             }
         }
         // 변경사항을 뷰에 알림
@@ -217,11 +233,18 @@ public class VsBoardModel extends BoardModel {
 //
         // 두 줄 이상이 삭제되었을 때만
         shiftUp(attackNum);
-        for (int row = 0; row < attackNum; row++) {
+//        for (int row = 0; row < attackNum; row++) {
+//            for (int col = 0; col < WIDTH; col++) {
+//                board[HEIGHT - attackNum + row][col] = opp_Lines[row][col];
+//                board_text[HEIGHT - attackNum + row][col] = opp_String[row][col];
+//                board_color[(HEIGHT - attackNum + row) * WIDTH + col] = Color.GRAY;
+//            }
+//        }
+        for (int r = HEIGHT - attackNum; r < HEIGHT; r++) {
             for (int col = 0; col < WIDTH; col++) {
-                board[HEIGHT - attackNum + row][col] = opp_Lines[row][col];
-                board_text[HEIGHT - attackNum + row][col] = opp_String[row][col];
-                board_color[(HEIGHT - attackNum + row) * WIDTH + col] = Color.GRAY;
+                board[r][col] = opp_Lines[r][col];
+                board_text[r][col] = opp_String[r][col];
+                board_color[(r+1) * (WIDTH+3) + col+1] = Color.GRAY;
             }
         }
 
