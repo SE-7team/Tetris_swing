@@ -16,13 +16,15 @@ import view.BoardView;
 import model.SingleMode.ModelStateChangeListener;
 import view.SidePanelView;
 
+import InProgress.DefenseBlockView;
+
 public class BoardController implements ModelStateChangeListener {
 
     protected BoardModel model;
     protected BoardView view;
     protected SidePanelView sidePanelView;
     protected KeyListener playerKeyListener;
-
+    protected DefenseBlockView DefenseBlockView;
 
     protected int selectedOption = 1;
 

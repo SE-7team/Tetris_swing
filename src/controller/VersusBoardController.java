@@ -10,6 +10,8 @@ import model.VersusMode.VsTimeBoardModel;
 import view.SidePanelView;
 import view.VsBoardView;
 
+import InProgress.DefenseBlockView;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -20,6 +22,8 @@ public class VersusBoardController extends BoardController implements VersusMode
     protected BoardModel P2Model;
     private VsBoardView P2View;
     private SidePanelView P2SidePanelView;
+
+    protected DefenseBlockView p2DefenseBlockView;
 
     public VersusBoardController() {
         // model = new BoardModel();
@@ -84,8 +88,24 @@ public class VersusBoardController extends BoardController implements VersusMode
         sidePanelView = new SidePanelView();
         P2View = new VsBoardView();
         P2SidePanelView = new SidePanelView();
-        view.getContentPane().add(sidePanelView, BorderLayout.EAST);
-        P2View.getContentPane().add(P2SidePanelView, BorderLayout.EAST);
+
+        DefenseBlockView = new DefenseBlockView();
+        p2DefenseBlockView = new DefenseBlockView();
+
+        // sidePanelView를 view의 EAST에 배치
+        JPanel panel = new JPanel(new GridLayout(3, 1,0,10));
+        panel.setBackground(Color.LIGHT_GRAY);
+        panel.add(sidePanelView);
+        panel.add(DefenseBlockView);
+        view.getContentPane().add(panel, BorderLayout.EAST);
+
+        // sidePanelView를 view의 EAST에 배치
+        JPanel P2panel = new JPanel(new GridLayout(3, 1,0,10));
+        P2panel.setBackground(Color.LIGHT_GRAY);
+        P2panel.add(P2SidePanelView);
+        P2panel.add(p2DefenseBlockView);
+        P2View.getContentPane().add(P2panel, BorderLayout.EAST);
+
         view.getContentPane().add(P2View.getContentPane(), BorderLayout.WEST);
         view.setController(this);
         view.setVisible(true);
@@ -182,6 +202,22 @@ public class VersusBoardController extends BoardController implements VersusMode
         }
     }
 
+    @Override
+    // 게임 상태 업데이트 후 View update를 위한 메서드
+    public void updateBoard() {
+        // 게임 로직 처리...
+        // 예를 들어, 게임 보드 상태를 업데이트하는 로직 수행
+
+        // View에 게임 보드 그리기 요청
+        view.drawBoard(model.getBoard(), model.getBoard_color(), model.getBoard_text());
+        // SidePanel에 다음 블럭 넘기기
+        sidePanelView.drawBoard(model.getNextBlock());
+        // 사이드 패널의 점수를 view에 넘겨야 한다
+        sidePanelView.setScoreText(model.getTotalscore());
+
+        DefenseBlockView.drawBoard(model.getDefenseBlockChunk());
+    }
+
 
     public void updateP2Board() {
             // 게임 로직 처리...
@@ -192,6 +228,8 @@ public class VersusBoardController extends BoardController implements VersusMode
             P2SidePanelView.drawBoard(P2Model.getNextBlock());
             // 사이드 패널의 점수를 view에 넘겨야 한다
             P2SidePanelView.setScoreText(P2Model.getTotalscore());
+
+            p2DefenseBlockView.drawBoard(P2Model.getDefenseBlockChunk());
     }
 
     @Override

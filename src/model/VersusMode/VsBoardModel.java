@@ -14,6 +14,11 @@ public class VsBoardModel extends BoardModel {
 
     private BlockChunk attackBlockChunk;
 
+    @Override
+    public BlockChunk getDefenseBlockChunk() {
+        return defenseBlockChunk;
+    }
+
     private BlockChunk defenseBlockChunk;
 
     public int playerType;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 import IO.ExportSettings;
+import model.VersusMode.BlockChunk;
 import model.blocks.*;
 import model.OutGame.OutGameModel;
 
@@ -617,4 +618,7 @@ public class BoardModel {
         return timer;
     }
 
+    public BlockChunk getDefenseBlockChunk() {
+        return null;
+    }
 }
