@@ -48,12 +48,22 @@ public class SidePanelView extends JPanel {
     private int y1 = 0;
 
     private SimpleAttributeSet styleSet;
+
+    public JTextPane getNextPiece() {
+        return nextPiece;
+    }
+
     private JTextPane nextPiece;
     private JPanel scorePanel;
+    public int[][] getBoard() {
+        return board;
+    }
+    public JTextPane getScoreText() {
+        return scoreText;
+    }
     private JTextPane scoreText;
 
     private String scoreString;
-
 
     public SidePanelView() {
         nextPiece = new JTextPane();
@@ -106,7 +116,6 @@ public class SidePanelView extends JPanel {
         nexttext.setBorder(new EmptyBorder(0, 0, 10, 0));
         nextPiece.add(nexttext, BorderLayout.NORTH);
     }
-
     // ArrayIndexOutOfBoundsException 오류 발생
     public void placeblock(Block nextBlock) {
         StyledDocument doc = nextPiece.getStyledDocument();
@@ -167,7 +176,6 @@ public class SidePanelView extends JPanel {
             sb.append(BORDER_CHAR);
             sb.append("\n");
         }
-
         // Draw bottom border
         for (int t = 0; t < WIDTH + 2; t++) sb.append(BORDER_CHAR);
 

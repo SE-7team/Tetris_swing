@@ -1,8 +1,6 @@
 package controller.OutGame;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import view.OutGame.ScoreBoardView;
 
 import javax.swing.*;
@@ -13,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ScoreBoardControllerTest {
     private ScoreBoardController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = ScoreBoardController.getInstance();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         controller.destroyView();
     }

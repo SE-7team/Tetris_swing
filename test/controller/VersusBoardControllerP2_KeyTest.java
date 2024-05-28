@@ -8,12 +8,14 @@ import static org.mockito.Mockito.*;
 import java.awt.event.KeyEvent;
 
 import IO.ExportSettings;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import org.mockito.Mockito;
 import view.BoardView;
 import view.SidePanelView;
+
+// 키설정이 맥북기준으로 바뀌어 있으면 테스트를 2번 돌려야 잘 됨
+
 public class VersusBoardControllerP2_KeyTest {
 
     private BoardModel model;
@@ -26,7 +28,7 @@ public class VersusBoardControllerP2_KeyTest {
     private VsBoardModel model_1;
     private VersusBoardController VScontroller;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         model_0 = Mockito.spy(new VsBoardModel(0));
         model_1 = Mockito.spy(new VsBoardModel(1));

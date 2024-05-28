@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ALL Test Controller Except Confilt_tests" type="JUnit" factoryName="JUnit" singleton="false">
+    <module name="Tetris_swing" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <patterns>
+      <pattern testClass="controller.OutGame.MenuControllerTest" />
+      <pattern testClass="controller.OutGame.ScoreBoardControllerTest" />
+      <pattern testClass="controller.OutGame.SettingsControllerTest" />
+      <pattern testClass="controller.OutGame.SettingsControllerTest2" />
+      <pattern testClass="controller.OutGame.VersusEnterControllerTest" />
+      <pattern testClass="controller.BoardControllerTest" />
+      <pattern testClass="controller.VersusBoardControllerTest" />
+      <pattern testClass="controller.BoardController_PlayerKeyListenerTest" />
+    </patterns>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

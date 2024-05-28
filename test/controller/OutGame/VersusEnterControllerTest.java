@@ -1,7 +1,6 @@
 package controller.OutGame;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import view.OutGame.VersusEnterView;
 
 import static org.junit.jupiter.api.Assertions.*;

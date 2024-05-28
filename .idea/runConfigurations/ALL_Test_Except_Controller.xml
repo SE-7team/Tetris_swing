@@ -1,0 +1,53 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ALL Test Except Controller" type="JUnit" factoryName="JUnit" singleton="false">
+    <module name="Tetris_swing" />
+    <option name="PACKAGE_NAME" value="IO" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <dir value="$PROJECT_DIR$/test/IO" />
+    <patterns>
+      <pattern testClass="IO.CopySettingsTest" />
+      <pattern testClass="IO.ExportSettingsTest" />
+      <pattern testClass="IO.ImportDefaultSettingsTest" />
+      <pattern testClass="IO.ImportSettingsTest" />
+      <pattern testClass="IO.ScoreIOTest" />
+      <pattern testClass="model.blocks.item.Alias.AliasBlockTest" />
+      <pattern testClass="model.blocks.item.Alias.LineClearBlockTest" />
+      <pattern testClass="model.blocks.item.Alias.LineFillBlockTest" />
+      <pattern testClass="model.blocks.item.Alias.TimerBlockTest" />
+      <pattern testClass="model.blocks.item.ClearBlockTest" />
+      <pattern testClass="model.blocks.item.WeightBlockTest" />
+      <pattern testClass="model.blocks.BlockTest" />
+      <pattern testClass="model.blocks.IBlockTest" />
+      <pattern testClass="model.blocks.JBlockTest" />
+      <pattern testClass="model.blocks.LBlockTest" />
+      <pattern testClass="model.blocks.OBlockTest" />
+      <pattern testClass="model.blocks.SBlockTest" />
+      <pattern testClass="model.blocks.TBlockTest" />
+      <pattern testClass="model.blocks.ZBlockTest" />
+      <pattern testClass="model.OutGame.OutGameModelTest" />
+      <pattern testClass="model.OutGame.ScoreBoardModelTest" />
+      <pattern testClass="model.SingleMode.BoardModelTest" />
+      <pattern testClass="model.SingleMode.BoardModelTest_simple" />
+      <pattern testClass="model.SingleMode.ItemBoardModelTest" />
+      <pattern testClass="model.SingleMode.ItemBoardModelTest_simple" />
+      <pattern testClass="model.VersusMode.VsBoardModelTest" />
+      <pattern testClass="model.VersusMode.VsItemBoardModelTest" />
+      <pattern testClass="model.VersusMode.VsTimeBoardModelTest" />
+      <pattern testClass="model.rws_select_Test" />
+      <pattern testClass="view.OutGame.MenuViewTest" />
+      <pattern testClass="view.OutGame.OutGameViewTest" />
+      <pattern testClass="view.OutGame.ScoreBoardViewTest" />
+      <pattern testClass="view.OutGame.SettingsViewTest" />
+      <pattern testClass="view.OutGame.VersusEnterViewTest" />
+      <pattern testClass="view.BoardViewTest" />
+      <pattern testClass="view.DefenseBlockViewTest" />
+      <pattern testClass="view.SidePanelViewTest" />
+      <pattern testClass="view.TimeViewTest" />
+    </patterns>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

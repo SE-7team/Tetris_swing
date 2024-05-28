@@ -3,8 +3,7 @@ package model;
 import junit.framework.TestCase;
 import model.OutGame.OutGameModel;
 import model.SingleMode.BoardModel;
-import org.junit.Test;
-
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

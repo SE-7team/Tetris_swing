@@ -1,7 +1,6 @@
 package IO;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ImportDefaultSettingsTest {
     Map<String, String> settings;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         settings = new HashMap<>();
     }

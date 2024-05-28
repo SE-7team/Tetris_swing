@@ -6,7 +6,11 @@ import IO.ImportSettings;
 import model.OutGame.OutGameModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
+
+@Execution(ExecutionMode.CONCURRENT)
 public class OutGameModelTest {
 
     private OutGameModel outGameModel;
@@ -18,6 +22,7 @@ public class OutGameModelTest {
 
     @Test
     void moveOptionFocusTest() {
+        outGameModel = OutGameModel.getInstance();
         outGameModel.setOptionFocus(0);
 
         outGameModel.moveOptionFocus(1);
@@ -36,6 +41,7 @@ public class OutGameModelTest {
 
     @Test
     void moveButtonFocusTest() {
+        outGameModel = OutGameModel.getInstance();
         outGameModel.setOptionFocus(0);
 
         for (int i = 0; i < OutGameModel.getOptionString().length; i++) {

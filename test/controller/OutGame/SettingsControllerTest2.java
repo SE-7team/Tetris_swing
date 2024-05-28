@@ -2,8 +2,7 @@ package controller.OutGame;
 
 import model.OutGame.OutGameModel;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import view.OutGame.SettingsView;
 
 import javax.swing.*;

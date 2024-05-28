@@ -356,5 +356,47 @@ public class SettingsView extends OutGameView {
     }
 
 
+    public JLabel getTitleLabel() {
+        return titleLabel;
+    }
 
+    public JLabel[] getOptionLabels() {
+        return optionLabel;
+    }
+
+    public JButton[] getResButtons() {
+        return resButton;
+    }
+
+    public JButton[] getKeyButtons1P() {
+        return keyButton;
+    }
+
+    public JLabel[] getKeyLabels1P() {
+        return keyLabel;
+    }
+
+    public JButton[] getKeyButtons2P() {
+        return keyButton2;
+    }
+
+    public JLabel[] getKeyLabels2P() {
+        return keyLabel2;
+    }
+
+    public JButton[] getBlindButtons() {
+        return blindButton;
+    }
+
+    public JButton[] getResetButtons() {
+        return resetButton;
+    }
+
+    public JButton[] getDifficultyButtons() {
+        return difficultyButton;
+    }
+
+    public Component[] getOptionPanels() {
+        return optionPanel;
+    }
 }
