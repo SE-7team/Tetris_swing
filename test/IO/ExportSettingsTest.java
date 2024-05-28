@@ -1,8 +1,7 @@
 package IO;
 
 import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

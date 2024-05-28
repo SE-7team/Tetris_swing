@@ -10,7 +10,7 @@ public class MenuView extends OutGameView {
     // Only for featureTest.
     // private JLabel[] arrowLabel = { new JLabel("<"), new JLabel(">") };
 
-    private JLabel[] gameModeLabel;
+    protected JLabel[] gameModeLabel;
 
     protected JButton[] menuButton;
 

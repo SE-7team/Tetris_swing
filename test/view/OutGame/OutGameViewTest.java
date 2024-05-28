@@ -70,4 +70,32 @@ public class OutGameViewTest {
         int result = JOptionPane.showConfirmDialog(null, message, "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         // Verification of GUI components should be done with proper GUI testing tools
     }
+
+    @Test
+    public void testInitButtons() {
+        String[] buttonStrings = {"Button1", "Button2"};
+        assertDoesNotThrow(() -> outGameView.initButtons(buttonStrings));
+    }
+
+    @Test
+    public void testPaintFocus() {
+        int focus = 1;
+        assertDoesNotThrow(() -> outGameView.paintFocus(focus));
+    }
+
+    @Test
+    public void testInitLabel() {
+        String[] labelStrings = {"Label1", "Label2"};
+        assertDoesNotThrow(() -> outGameView.initLable(labelStrings));
+    }
+
+    @Test
+    public void testInitTitle_WithParams() {
+        String[] buildString = {"Title Part 1", "Title Part 2"};
+        int buildType = 1;
+        outGameView.initTitle(buildString, buildType);
+
+        assertNotNull(outGameView.titleLabel, "Title label should not be null");
+        assertEquals("", outGameView.titleLabel.getText(), "Title label text should be empty");
+    }
 }

@@ -20,8 +20,11 @@ import org.json.simple.JSONObject;
 public class ScoreBoardView extends JFrame {
     private JScrollPane scroll;
     private DefaultTableModel tableModel;
-    private JTable table;
 
+    public JTable getTable() {
+        return table;
+    }
+    private JTable table;
     public ScoreBoardView() {
         super("User Score Board");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,7 +35,7 @@ public class ScoreBoardView extends JFrame {
         setFocusable(true);
         requestFocus();
         loadScoreBoard(ScoreBoardModel.getJsonArr());
-        //각 칼럼을 누르면 칼럼별로 정렬됨
+        // 각 칼럼을 누르면 칼럼별로 정렬됨
         TableRowSorter rowSorter = new TableRowSorter<TableModel>(table.getModel());
         rowSorter.setComparator(4, new Comparator<Long>() {
             @Override
@@ -78,7 +81,6 @@ public class ScoreBoardView extends JFrame {
             tableModel.addColumn(columnString[i]);
         }
     }
-
     private void initTable() {
         // 테이블 생성
         table = new JTable(tableModel);
@@ -93,7 +95,6 @@ public class ScoreBoardView extends JFrame {
         table.setEnabled(false);
         setLocationRelativeTo(null);
     }
-
     private void settingForTable(String[] columnString) {
         DefaultTableCellRenderer celAlignCenter = new DefaultTableCellRenderer();
         celAlignCenter.setHorizontalAlignment(JLabel.CENTER);
@@ -144,11 +145,11 @@ public class ScoreBoardView extends JFrame {
     }
 
     //정렬 순서에 따른 순위 갱신 for Chatgpt 3.5
-    private void updateRanks() {
-        // Get the number of rows in the table model
+    protected void updateRanks() {
+        //Get the number of rows in the table model
         int rowCount = tableModel.getRowCount();
 
-        // Update ranks based on sorted indices
+        //Update ranks based on sorted indices
         for (int i = 0; i < rowCount; i++) {
             int modelIndex = table.convertRowIndexToModel(i); // Convert view index to model index
             tableModel.setValueAt(i + 1, modelIndex, 0); // Set rank in the model
@@ -160,26 +161,25 @@ public class ScoreBoardView extends JFrame {
 class HighlightRenderer extends DefaultTableCellRenderer {
     private String highlightName;
     private int highlightScore;
-    private String highlightMode;
+    //private String highlightMode;
 
     public HighlightRenderer(String highlightName, int highlightScore) {
         this.highlightName = highlightName;
         this.highlightScore = highlightScore;
         setOpaque(true);
     }
-
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus,
                                                    int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        // Convert score to Long for comparison because table stores it as Long
-        // Since 'difficulty' was added, 'name' is now at column 2, 'mode' at column 3, and 'score' at column 4 in the model
+        //Convert score to Long for comparison because table stores it as Long
+        //Since 'difficulty' was added, 'name' is now at column 2, 'mode' at column 3, and 'score' at column 4 in the model
         Long scoreValue = (table.getValueAt(row, 4) instanceof Long) ? (Long) table.getValueAt(row, 4) : 0;
         String nameValue = (String) table.getValueAt(row, 3); // Retrieve name from column 3
 
-        // Check if this row matches the highlighted row based on name, mode, and score
+        //Check if this row matches the highlighted row based on name, mode, and score
         if (nameValue.equals(highlightName) && scoreValue == highlightScore  ) {
             c.setForeground(Color.ORANGE); // Change text color
             c.setFont(c.getFont().deriveFont(Font.BOLD)); // Make text bold

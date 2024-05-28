@@ -39,4 +39,11 @@ public class VersusEnterView extends MenuView {
         this.add(mainPanel);
     }
 
+    public JLabel getTitleLabel() {
+        return titleLabel;
+    }
+
+    public JButton[] getMenuButtons() {
+        return menuButton;
+    }
 }

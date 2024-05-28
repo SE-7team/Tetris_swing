@@ -7,13 +7,14 @@ import java.awt.event.KeyEvent;
 
 import IO.ExportSettings;
 import model.OutGame.OutGameModel;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import model.SingleMode.BoardModel;
 import org.mockito.Mockito;
 import view.BoardView;
 import view.SidePanelView;
+
+// 키설정이 맥북기준으로 바뀌어 있으면 테스트를 2번 돌려야 잘 됨
 
 public class BoardController_PlayerKeyListenerTest {
 
@@ -25,7 +26,7 @@ public class BoardController_PlayerKeyListenerTest {
     private BoardController controller;
     private BoardController.PlayerKeyListener keyListener;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         model = Mockito.spy(BoardModel.class);
         view = Mockito.spy(BoardView.class);

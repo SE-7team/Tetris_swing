@@ -2,8 +2,7 @@ package model.OutGame;
 
 import static org.junit.Assert.*;
 import org.json.simple.JSONArray;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
@@ -11,7 +10,7 @@ import static org.mockito.Mockito.*;
 public class ScoreBoardModelTest {
     private ScoreBoardModel scoreBoardModel;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         scoreBoardModel = new ScoreBoardModel();
     }

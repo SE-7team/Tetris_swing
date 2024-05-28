@@ -5,8 +5,7 @@ import model.VersusMode.VsBoardModel;
 import model.VersusMode.VsItemBoardModel;
 import model.VersusMode.VsTimeBoardModel;
 import model.blocks.Block;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import view.BoardView;
 import view.SidePanelView;
@@ -23,7 +22,7 @@ public class VersusBoardControllerTest {
     private VsBoardModel model_1;
     private VersusBoardController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         model_0 = Mockito.spy(new VsBoardModel(0));
         model_1 = Mockito.spy(new VsBoardModel(1));

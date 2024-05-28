@@ -1,7 +1,6 @@
 package controller.OutGame;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import view.OutGame.SettingsView;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import static org.mockito.Mockito.*;
 public class SettingsControllerTest {
     private SettingsController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // 테스트 전에 실행되는 초기화 메서드
         controller = SettingsController.getInstance();

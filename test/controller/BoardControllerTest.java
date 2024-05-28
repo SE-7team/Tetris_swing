@@ -2,8 +2,7 @@ package controller;
 
 import model.SingleMode.BoardModel;
 import model.blocks.Block;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import view.BoardView;
 import view.SidePanelView;
@@ -22,7 +21,7 @@ public class BoardControllerTest {
     private BoardController controller;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         model = Mockito.spy(new BoardModel());
         view = Mockito.spy(new BoardView());
