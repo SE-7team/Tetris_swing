@@ -12,8 +12,7 @@ import java.io.FileReader;
 public class ExportSettings {
 
     public static void saveSettings(String key, String value) {
-        String appDataPath = System.getProperty("user.home") + "/Library/Application Support/Tetris";
-        File file = new File(appDataPath, "settings.ini");
+        File file = new File("settings.ini");
         Map<String, String> settings = new HashMap<>();
 
         // 기존 설정 파일 읽기

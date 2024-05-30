@@ -21,9 +21,7 @@ public class ImportSettingsTest {
     }
     @Test
     public void testImportImportSettings(){
-        String appDataPath = System.getProperty("user.home") + "/Library/Application Support/Tetris/";
-
-        read_File_settings(appDataPath + "settings.ini");
+        read_File_settings("settings.ini");
         for (Map.Entry<String, String> entry : settings.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
